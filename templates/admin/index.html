@@ -1,0 +1,222 @@
+{% extends 'admin/base.html' %}
+{% load i18n unfold %}
+{% load static %}
+
+{% block extrahead %}
+<link rel="stylesheet" href="{% static 'css/design-system.css' %}" />
+<link rel="stylesheet" href="{% static 'admin/css/admin.css' %}" />
+<link rel="stylesheet" href="{% static 'css/admin/lensvault-admin.css' %}" />
+{% endblock %}
+
+{% block nav-sidebar %}
+<div id="lv-admin-sidebar-wrapper">
+    <aside id="lv-admin-sidebar" class="lv-admin-sidebar fixed top-0 left-0 z-50 h-screen w-[270px] border-r border-base-200 bg-white dark:bg-base-900 xl:relative xl:z-auto xl:h-auto xl:min-h-screen">
+        <div class="flex h-[68px] items-center gap-3 border-b border-base-200 px-5">
+            <span class="material-symbols-outlined text-3xl text-link">camera</span>
+            <div>
+                <div class="text-lg font-semibold text-important">LensVault</div>
+                <div class="text-[11px] text-base-400 tracking-wide">Studio Administration</div>
+            </div>
+        </div>
+
+        <div class="lv-sidebar-scroll h-[calc(100vh-68px)] px-3 py-4 space-y-5 xl:h-auto xl:max-h-none">
+            <div>
+                <p class="px-2 mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-base-400">Main</p>
+                <nav class="space-y-0.5">
+                    <a href="{% url 'admin:index' %}" class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-important lv-nav-item-active">
+                        <span class="material-symbols-outlined text-lg text-link">dashboard</span>
+                        Dashboard
+                    </a>
+                </nav>
+            </div>
+
+            <div>
+                <p class="px-2 mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-base-400">Photography</p>
+                <nav class="space-y-0.5">
+                    <a href="{% url 'admin:events_event_changelist' %}" class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-base-600 hover:bg-base-50 hover:text-important dark:text-base-300 dark:hover:bg-base-800">
+                        <span class="material-symbols-outlined text-lg text-link">calendar_today</span>
+                        Events
+                    </a>
+                    <a href="{% url 'admin:albums_album_changelist' %}" class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-base-600 hover:bg-base-50 hover:text-important dark:text-base-300 dark:hover:bg-base-800">
+                        <span class="material-symbols-outlined text-lg text-link">photo_library</span>
+                        Albums
+                    </a>
+                    <a href="{% url 'admin:media_media_changelist' %}" class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-base-600 hover:bg-base-50 hover:text-important dark:text-base-300 dark:hover:bg-base-800">
+                        <span class="material-symbols-outlined text-lg text-link">image</span>
+                        Photos
+                    </a>
+                    <a href="{% url 'admin:gallery_clientgallery_changelist' %}" class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-base-600 hover:bg-base-50 hover:text-important dark:text-base-300 dark:hover:bg-base-800">
+                        <span class="material-symbols-outlined text-lg text-link">collections</span>
+                        Client Galleries
+                    </a>
+                </nav>
+            </div>
+
+            <div>
+                <p class="px-2 mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-base-400">Content / CMS</p>
+                <nav class="space-y-0.5">
+                    <a href="{% url 'admin:cms_herosection_changelist' %}" class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-base-600 hover:bg-base-50 hover:text-important dark:text-base-300 dark:hover:bg-base-800">
+                        <span class="material-symbols-outlined text-lg text-link">view_carousel</span>
+                        Hero Section
+                    </a>
+                    <a href="{% url 'admin:cms_feature_changelist' %}" class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-base-600 hover:bg-base-50 hover:text-important dark:text-base-300 dark:hover:bg-base-800">
+                        <span class="material-symbols-outlined text-lg text-link">stars</span>
+                        Features
+                    </a>
+                    <a href="{% url 'admin:cms_workflowstep_changelist' %}" class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-base-600 hover:bg-base-50 hover:text-important dark:text-base-300 dark:hover:bg-base-800">
+                        <span class="material-symbols-outlined text-lg text-link">linear_scale</span>
+                        Workflow
+                    </a>
+                    <a href="{% url 'admin:cms_galleryshowcase_changelist' %}" class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-base-600 hover:bg-base-50 hover:text-important dark:text-base-300 dark:hover:bg-base-800">
+                        <span class="material-symbols-outlined text-lg text-link">photo_album</span>
+                        Gallery Showcase
+                    </a>
+                    <a href="{% url 'admin:cms_trustsection_changelist' %}" class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-base-600 hover:bg-base-50 hover:text-important dark:text-base-300 dark:hover:bg-base-800">
+                        <span class="material-symbols-outlined text-lg text-link">verified_user</span>
+                        Trust Section
+                    </a>
+                    <a href="{% url 'admin:cms_ctasection_changelist' %}" class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-base-600 hover:bg-base-50 hover:text-important dark:text-base-300 dark:hover:bg-base-800">
+                        <span class="material-symbols-outlined text-lg text-link">campaign</span>
+                        CTA Section
+                    </a>
+                    <a href="{% url 'admin:cms_mediaasset_changelist' %}" class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-base-600 hover:bg-base-50 hover:text-important dark:text-base-300 dark:hover:bg-base-800">
+                        <span class="material-symbols-outlined text-lg text-link">perm_media</span>
+                        Media Library
+                    </a>
+                </nav>
+            </div>
+
+            <div>
+                <p class="px-2 mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-base-400">Website</p>
+                <nav class="space-y-0.5">
+                    <a href="{% url 'admin:cms_sitesettings_changelist' %}" class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-base-600 hover:bg-base-50 hover:text-important dark:text-base-300 dark:hover:bg-base-800">
+                        <span class="material-symbols-outlined text-lg text-link">settings</span>
+                        Site Settings
+                    </a>
+                    <a href="{% url 'admin:cms_seosettings_changelist' %}" class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-base-600 hover:bg-base-50 hover:text-important dark:text-base-300 dark:hover:bg-base-800">
+                        <span class="material-symbols-outlined text-lg text-link">search</span>
+                        SEO Settings
+                    </a>
+                    <a href="{% url 'admin:cms_themesettings_changelist' %}" class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-base-600 hover:bg-base-50 hover:text-important dark:text-base-300 dark:hover:bg-base-800">
+                        <span class="material-symbols-outlined text-lg text-link">palette</span>
+                        Theme Settings
+                    </a>
+                </nav>
+            </div>
+
+            <div>
+                <p class="px-2 mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-base-400">Activity</p>
+                <nav class="space-y-0.5">
+                    <a href="{% url 'admin:gallery_galleryvisit_changelist' %}" class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-base-600 hover:bg-base-50 hover:text-important dark:text-base-300 dark:hover:bg-base-800">
+                        <span class="material-symbols-outlined text-lg text-link">visibility</span>
+                        Gallery Visits
+                    </a>
+                    <a href="{% url 'admin:gallery_gallerydownloadlog_changelist' %}" class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-base-600 hover:bg-base-50 hover:text-important dark:text-base-300 dark:hover:bg-base-800">
+                        <span class="material-symbols-outlined text-lg text-link">download</span>
+                        Download History
+                    </a>
+                    <a href="{% url 'admin:gallery_galleryfavorite_changelist' %}" class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-base-600 hover:bg-base-50 hover:text-important dark:text-base-300 dark:hover:bg-base-800">
+                        <span class="material-symbols-outlined text-lg text-link">favorite</span>
+                        Favorites
+                    </a>
+                </nav>
+            </div>
+
+            <div>
+                <p class="px-2 mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-base-400">System</p>
+                <nav class="space-y-0.5">
+                    <a href="{% url 'admin:accounts_user_changelist' %}" class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-base-600 hover:bg-base-50 hover:text-important dark:text-base-300 dark:hover:bg-base-800">
+                        <span class="material-symbols-outlined text-lg text-link">person</span>
+                        Users
+                    </a>
+                    <a href="{% url 'admin:accounts_staff_changelist' %}" class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-base-600 hover:bg-base-50 hover:text-important dark:text-base-300 dark:hover:bg-base-800">
+                        <span class="material-symbols-outlined text-lg text-link">badge</span>
+                        Staff
+                    </a>
+                    <a href="{% url 'admin:auth_group_changelist' %}" class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-base-600 hover:bg-base-50 hover:text-important dark:text-base-300 dark:hover:bg-base-800">
+                        <span class="material-symbols-outlined text-lg text-link">group</span>
+                        Groups
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </aside>
+    <div id="lv-sidebar-overlay" class="fixed inset-0 bg-black/40 z-40 hidden xl:hidden" onclick="lvToggleAdminSidebar()"></div>
+</div>
+{% endblock %}
+
+{% block header %}
+<div class="sticky top-0 z-30 flex h-[68px] items-center justify-between border-b border-base-200 bg-white/80 px-6 backdrop-blur-sm dark:bg-base-900/80">
+    <div class="flex items-center gap-3">
+        <button class="lg:hidden rounded-lg p-2 text-base-500 hover:bg-base-50 dark:text-base-400 dark:hover:bg-base-800" onclick="lvToggleAdminSidebar()" aria-label="Toggle menu">
+            <span class="material-symbols-outlined text-xl">menu</span>
+        </button>
+        <h1 class="text-base font-semibold text-important">Dashboard</h1>
+    </div>
+
+    <div class="flex items-center gap-3">
+        <div class="hidden md:flex items-center rounded-lg border border-base-200 bg-base-50 px-3 py-1.5 dark:bg-base-800">
+            <span class="material-symbols-outlined text-lg text-base-400">search</span>
+            <input type="text" placeholder="Search..." class="ml-2 bg-transparent text-sm outline-none w-48 placeholder:text-base-400 dark:text-important" />
+        </div>
+
+        <button class="relative rounded-lg p-2 text-base-500 hover:bg-base-50 dark:text-base-400 dark:hover:bg-base-800">
+            <span class="material-symbols-outlined text-xl">notifications</span>
+            <span class="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-rose-500"></span>
+        </button>
+
+        <div class="flex items-center gap-3">
+            <div class="hidden text-right sm:block">
+                <p class="text-sm font-medium text-important">{{ request.user.get_full_name|default:request.user.email }}</p>
+            </div>
+            <form method="post" action="{% url 'admin:logout' %}" class="flex items-center gap-2">
+                {% csrf_token %}
+                <button type="submit" class="rounded-lg border border-base-200 px-3 py-1.5 text-sm font-medium text-base-600 hover:bg-base-50 dark:border-base-700 dark:text-base-300 dark:hover:bg-base-800">
+                    Logout
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-[1600px] bg-base-50 p-6 dark:bg-base-900">
+    <div class="lv-dashboard-header">
+        <h1>Welcome back, {{ request.user.get_full_name|default:request.user.email|truncatechars:35 }}</h1>
+        <p>Manage your photography studio from one beautiful workspace.</p>
+    </div>
+
+    {% include 'admin/dashboard/stat_cards.html' %}
+    <div class="mt-6">{% include 'admin/dashboard/quick_actions.html' %}</div>
+    <div class="mt-6">{% include 'admin/dashboard/recent_activity.html' %}</div>
+    <div class="mt-6">{% include 'admin/dashboard/system_overview.html' %}</div>
+</div>
+{% endblock %}
+
+<script>
+function lvToggleAdminSidebar() {
+    var sidebar = document.getElementById('lv-admin-sidebar');
+    var overlay = document.getElementById('lv-sidebar-overlay');
+    if (!sidebar || !overlay) return;
+    var isOpen = sidebar.classList.contains('lv-sidebar-open');
+    if (isOpen) {
+        sidebar.classList.remove('lv-sidebar-open');
+        overlay.classList.add('hidden');
+    } else {
+        sidebar.classList.add('lv-sidebar-open');
+        overlay.classList.remove('hidden');
+    }
+}
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        var sidebar = document.getElementById('lv-admin-sidebar');
+        var overlay = document.getElementById('lv-sidebar-overlay');
+        if (sidebar && overlay && sidebar.classList.contains('lv-sidebar-open')) {
+            sidebar.classList.remove('lv-sidebar-open');
+            overlay.classList.add('hidden');
+        }
+    }
+});
+</script>

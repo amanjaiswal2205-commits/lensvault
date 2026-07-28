@@ -1,0 +1,76 @@
+{% extends "media/base_media.html" %}
+
+{% block title %}Edit Media &middot; {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto max-w-3xl px-4 py-8">
+  <div class="bg-white rounded-2xl shadow-sm ring-1 ring-black/5 p-6 sm:p-8">
+    <h1 class="text-2xl font-bold text-gray-900">Edit Media</h1>
+    <p class="text-sm text-gray-500 mb-6">Update <span class="font-medium">{{ media_item.title }}</span>.</p>
+
+    <form method="post" action="{% url 'media:media_update' media_item.uuid %}" enctype="multipart/form-data" data-loading novalidate>
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+        </div>
+      {% endif %}
+
+      {% for field in form %}
+        {% if field.name == 'file' %}
+          <div class="mb-4">
+            <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ field.label }}</label>
+            {% if media_item.file %}<p class="text-xs text-gray-500 mb-1">Current: {{ media_item.file.name|slice:"-40:" }}</p>{% endif %}
+            {{ field }}
+            {% for error in field.errors %}<p class="mt-1 text-sm text-red-600">{{ error }}</p>{% endfor %}
+          </div>
+        {% elif field.name == 'thumbnail' %}
+          <div class="mb-4">
+            <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ field.label }}</label>
+            {% if media_item.thumbnail %}
+              <div class="mb-2"><img src="{{ media_item.thumbnail.url }}" alt="Current thumbnail" class="h-40 w-full max-w-sm object-cover rounded-lg ring-1 ring-gray-200"></div>
+            {% endif %}
+            {{ field }}
+            <div id="thumb-preview" class="mt-3 hidden">
+              <img src="" alt="New thumbnail preview" class="h-40 w-full max-w-sm object-cover rounded-lg ring-1 ring-gray-200">
+            </div>
+            {% for error in field.errors %}<p class="mt-1 text-sm text-red-600">{{ error }}</p>{% endfor %}
+          </div>
+        {% elif field.name == 'is_featured' %}
+          <div class="mb-4 flex items-center gap-3">
+            {{ field }}
+            <label for="{{ field.id_for_label }}" class="text-sm text-gray-700">{{ field.label }}</label>
+            {% for error in field.errors %}<p class="mt-1 text-sm text-red-600">{{ error }}</p>{% endfor %}
+          </div>
+        {% else %}
+          {% include "media/partials/form_field.html" with field=field %}
+        {% endif %}
+      {% endfor %}
+
+      <div class="flex items-center gap-3 mt-6">
+        <button type="submit" data-loading-btn
+                class="inline-flex justify-center items-center gap-2 rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-300 transition">
+          <span data-loading-label>Save Changes</span>
+        </button>
+        <a href="{{ media_item.get_absolute_url }}" class="rounded-lg border border-gray-300 px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var input = document.getElementById('id_thumbnail');
+    var preview = document.getElementById('thumb-preview');
+    var img = preview ? preview.querySelector('img') : null;
+    if (input && preview && img) {
+      input.addEventListener('change', function () {
+        var file = input.files && input.files[0];
+        if (file) { img.src = URL.createObjectURL(file); preview.classList.remove('hidden'); }
+        else { preview.classList.add('hidden'); }
+      });
+    }
+  });
+</script>
+{% endblock %}

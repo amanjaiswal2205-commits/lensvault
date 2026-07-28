@@ -1,0 +1,16 @@
+{% load i18n unfold %}
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    {% for stat in dashboard_stats %}
+        <div class="lv-stat-card">
+            <div class="lv-stat-icon {{ stat.color }} {% if stat.title == 'Total Galleries' %}lv-stat-galleries{% elif stat.title == 'Total Events' %}lv-stat-events{% elif stat.title == 'Total Photos' %}lv-stat-photos{% elif stat.title == 'Total Downloads' %}lv-stat-downloads{% elif stat.title == 'Total Favorites' %}lv-stat-favorites{% elif stat.title == 'Gallery Visits' %}lv-stat-visits{% endif %}">
+                <span class="material-symbols-outlined">{{ stat.icon }}</span>
+            </div>
+            <div class="lv-stat-content">
+                <span class="lv-stat-label">{{ stat.title }}</span>
+                <span class="lv-stat-value">{{ stat.value }}</span>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+

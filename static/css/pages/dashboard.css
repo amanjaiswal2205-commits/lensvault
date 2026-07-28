@@ -1,0 +1,104 @@
+/* Dashboard page styles */
+.lv-sidebar { width: 260px; }
+.lv-sidebar.collapsed { width: 72px; }
+.lv-main-content { margin-left: 260px; }
+.lv-main-content.expanded { margin-left: 72px; }
+@media (max-width: 1024px) {
+  .lv-sidebar { transform: translateX(-100%); }
+  .lv-sidebar.lv-sidebar-open { transform: translateX(0); }
+  .lv-main-content { margin-left: 0 !important; }
+
+  .lv-sidebar-mobile-trigger {
+    display: inline-flex;
+  }
+}
+
+.lv-sidebar-mobile-trigger {
+  display: none;
+}
+
+/* Glass variant for stat cards */
+.lv-stat-card-glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+[data-theme="dark"] .lv-stat-card-glass {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.lv-stat-card-glass:hover {
+  box-shadow: var(--lv-shadow-xl);
+}
+
+/* Quick Actions */
+.lv-quick-actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .lv-quick-actions {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.lv-quick-action-card {
+  background: var(--lv-bg-primary);
+  border: 1px solid var(--lv-border-color);
+  border-radius: var(--lv-radius-2xl);
+  padding: 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+  transition: all 250ms ease;
+  height: 100%;
+}
+
+.lv-quick-action-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--lv-shadow-lg);
+  border-color: var(--lv-primary-300);
+}
+
+.lv-quick-action-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--lv-primary-100);
+  border-radius: var(--lv-radius-lg);
+  font-size: 1.25rem;
+}
+
+[data-theme="dark"] .lv-quick-action-icon {
+  background: rgba(99, 102, 241, 0.2);
+}
+
+.lv-quick-action-title {
+  font-size: var(--lv-text-base);
+  font-weight: var(--lv-font-semibold);
+  color: var(--lv-text-primary);
+  margin: 0;
+}
+
+.lv-quick-action-description {
+  font-size: var(--lv-text-sm);
+  color: var(--lv-text-secondary);
+  margin: 0;
+  line-height: var(--lv-leading-relaxed);
+}
+
+/* Progress utility */
+.lv-progress-42 {
+  width: 42%;
+}

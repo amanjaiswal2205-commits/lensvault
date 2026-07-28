@@ -1,0 +1,13 @@
+{% load static %}
+<div class="lv-card lv-card-glass lv-stat-card">
+  <div class="lv-stat-icon">{{ icon|default:"📊" }}</div>
+  <div class="lv-stat-content">
+    <p class="lv-stat-label">{{ label }}</p>
+    <p class="lv-stat-value">{{ value }}</p>
+    {% if trend %}
+    <p class="lv-stat-trend {% if trend > 0 %}lv-trend-up{% else %}lv-trend-down{% endif %}">
+      {{ trend }}% {{ trend_label|default:"vs last month" }}
+    </p>
+    {% endif %}
+  </div>
+</div>

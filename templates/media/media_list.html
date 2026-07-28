@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}Media Library{% endblock %}
+
+{% block content %}
+<div class="lv-page">
+  <div class="lv-page-header">
+    <div>
+      <h1 class="lv-page-title">Media Library</h1>
+      <p class="lv-page-subtitle">Manage your images and videos</p>
+    </div>
+    <a href="{% url 'media:media_create' %}" class="lv-btn lv-btn-primary">
+      <svg class="lv-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+      </svg>
+      Add Media
+    </a>
+  </div>
+
+  <div class="lv-card lv-card-glass lv-filters-card">
+    <div class="lv-card-body">
+      <form method="get" class="lv-filters-form">
+        <div class="lv-filters-grid">
+          <div class="lv-form-group lv-flex-grow-2">
+            <input type="text" name="search" value="{{ search }}" placeholder="Search media..." class="lv-input" />
+          </div>
+          <div class="lv-form-group">
+            <select name="event" class="lv-input">
+              <option value="">All Events</option>
+              {% for ev in events %}
+                <option value="{{ ev.slug }}" {% if event_filter == ev.slug %}selected{% endif %}>{{ ev.title }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="lv-form-group">
+            <select name="album" class="lv-input">
+              <option value="">All Albums</option>
+              {% for al in albums %}
+                <option value="{{ al.slug }}" {% if album_filter == al.slug %}selected{% endif %}>{{ al.title }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="lv-form-group">
+            <select name="media_type" class="lv-input">
+              <option value="">All Types</option>
+              {% for value, label in type_choices %}
+                <option value="{{ value }}" {% if type_filter == value %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="lv-form-group">
+            <select name="status" class="lv-input">
+              <option value="">All Status</option>
+              {% for value, label in status_choices %}
+                <option value="{{ value }}" {% if status_filter == value %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="lv-form-group">
+            <select name="sort" class="lv-input">
+              <option value="latest" {% if sort == 'latest' %}selected{% endif %}>Latest</option>
+              <option value="oldest" {% if sort == 'oldest' %}selected{% endif %}>Oldest</option>
+              <option value="most_viewed" {% if sort == 'most_viewed' %}selected{% endif %}>Most Viewed</option>
+              <option value="most_downloaded" {% if sort == 'most_downloaded' %}selected{% endif %}>Most Downloaded</option>
+            </select>
+          </div>
+          <button type="submit" class="lv-btn lv-btn-primary">Apply</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  {% if media_items %}
+  <div class="lv-media-grid">
+    {% for item in media_items %}
+    <div class="lv-card lv-media-card">
+      <a href="{{ item.get_absolute_url }}" class="lv-media-link">
+        <div class="lv-media-thumb">
+          {% if item.is_image %}
+            {% if item.thumbnail %}<img src="{{ item.thumbnail.url }}" alt="{{ item.title }}" loading="lazy" />
+            {% elif item.file %}<img src="{{ item.file.url }}" alt="{{ item.title }}" loading="lazy" />
+            {% else %}<div class="lv-media-placeholder">🖼️</div>{% endif %}
+          {% else %}
+            {% if item.thumbnail %}<img src="{{ item.thumbnail.url }}" alt="{{ item.title }}" loading="lazy" />
+            {% else %}<div class="lv-media-placeholder">🎬</div>{% endif %}
+          {% endif %}
+          <span class="lv-badge lv-badge-{% if item.media_type == 'video' %}secondary{% else %}primary{% endif %} lv-media-badge">
+            {{ item.get_media_type_display }}
+          </span>
+        </div>
+        <div class="lv-card-body">
+          <h3 class="lv-media-title">{{ item.title }}</h3>
+          <p class="lv-media-meta">{{ item.file_size_mb }} MB · 👁 {{ item.view_count }}</p>
+        </div>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if is_paginated %}
+  <div class="lv-pagination">
+    {% if page_obj.has_previous %}
+      <a href="?{% if search %}search={{ search }}&{% endif %}{% if event_filter %}event={{ event_filter }}&{% endif %}{% if album_filter %}album={{ album_filter }}&{% endif %}{% if type_filter %}media_type={{ type_filter }}&{% endif %}{% if status_filter %}status={{ status_filter }}&{% endif %}sort={{ sort }}&page={{ page_obj.previous_page_number }}"
+         class="lv-btn lv-btn-secondary">← Previous</a>
+    {% endif %}
+    <span class="lv-pagination-info">Page {{ page_obj.number }} of {{ paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+      <a href="?{% if search %}search={{ search }}&{% endif %}{% if event_filter %}event={{ event_filter }}&{% endif %}{% if album_filter %}album={{ album_filter }}&{% endif %}{% if type_filter %}media_type={{ type_filter }}&{% endif %}{% if status_filter %}status={{ status_filter }}&{% endif %}sort={{ sort }}&page={{ page_obj.next_page_number }}"
+         class="lv-btn lv-btn-secondary">Next →</a>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% else %}
+  <div class="lv-card lv-card-glass">
+    <div class="lv-card-body">
+      {% include "components/empty_states.html" with icon="🎞️" title="No media found" description="Upload your first media file to get started." cta_text="Add Media" cta_url=media_create_url %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

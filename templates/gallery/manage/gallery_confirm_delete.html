@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Delete Client Gallery{% endblock %}
+
+{% block breadcrumb_items %}
+<li><a href="{% url 'gallery:gallery_manage_list' %}">Client Galleries</a></li>
+<li><span>Delete</span></li>
+{% endblock %}
+
+{% block content %}
+<div class="lv-page">
+  {% include "components/breadcrumb.html" %}
+  <div class="lv-page-header">
+    <div>
+      <h1 class="lv-page-title">Delete Client Gallery</h1>
+      <p class="lv-page-subtitle">This action cannot be undone.</p>
+    </div>
+  </div>
+
+  <div class="lv-card lv-card-glass">
+    <div class="lv-card-body">
+      <p class="mb-4">Are you sure you want to delete <strong>{{ gallery.name }}</strong>?</p>
+      <p class="text-sm text-gray-500 mb-4">
+        This will permanently remove the client gallery and its associated visit logs, favorites, and download records.
+        The underlying event, albums, and media files will remain intact.
+      </p>
+      <form method="post" class="lv-form-actions">
+        {% csrf_token %}
+        <button type="submit" class="lv-btn lv-btn-danger">Delete Gallery</button>
+        <a href="{% url 'gallery:gallery_manage_detail' gallery.slug %}" class="lv-btn lv-btn-ghost">Cancel</a>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

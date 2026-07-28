@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Create Client Gallery{% endblock %}
+
+{% block breadcrumb_items %}
+<li><a href="{% url 'gallery:gallery_manage_list' %}">Client Galleries</a></li>
+<li><span>Create Gallery</span></li>
+{% endblock %}
+
+{% block content %}
+<div class="lv-page">
+  {% include "components/breadcrumb.html" %}
+  <div class="lv-page-header">
+    <div>
+      <h1 class="lv-page-title">Create Client Gallery</h1>
+      <p class="lv-page-subtitle">Set up a new shareable gallery for your clients</p>
+    </div>
+  </div>
+
+  <div class="lv-card lv-card-glass">
+    <div class="lv-card-body">
+      <form method="post" novalidate>
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+          <div class="lv-form-error">
+            {% for error in form.non_field_errors %}
+              <p>{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <div class="lv-form-group">
+          <label for="{{ form.name.id_for_label }}" class="lv-label">Gallery Name</label>
+          {{ form.name }}
+          {% if form.name.errors %}
+            <p class="lv-form-error">{{ form.name.errors|striptags }}</p>
+          {% endif %}
+        </div>
+
+        <div class="lv-form-group">
+          <label for="{{ form.event.id_for_label }}" class="lv-label">Event</label>
+          {{ form.event }}
+          {% if form.event.errors %}
+            <p class="lv-form-error">{{ form.event.errors|striptags }}</p>
+          {% endif %}
+        </div>
+
+        <div class="lv-form-group">
+          <label for="{{ form.access_type.id_for_label }}" class="lv-label">Access Type</label>
+          {{ form.access_type }}
+          {% if form.access_type.errors %}
+            <p class="lv-form-error">{{ form.access_type.errors|striptags }}</p>
+          {% endif %}
+        </div>
+
+        <div class="lv-form-group">
+          <label for="{{ form.gallery_password.id_for_label }}" class="lv-label">Gallery Password</label>
+          {{ form.gallery_password }}
+          {% if form.gallery_password.errors %}
+            <p class="lv-form-error">{{ form.gallery_password.errors|striptags }}</p>
+          {% endif %}
+          <p class="lv-form-hint">Leave empty for public or private access.</p>
+        </div>
+
+        <div class="lv-form-group">
+          <label for="{{ form.expires_at.id_for_label }}" class="lv-label">Expiry Date</label>
+          {{ form.expires_at }}
+          {% if form.expires_at.errors %}
+            <p class="lv-form-error">{{ form.expires_at.errors|striptags }}</p>
+          {% endif %}
+          <p class="lv-form-hint">Optional. Leave empty for no expiry.</p>
+        </div>
+
+        <div class="lv-form-group">
+          <label class="lv-checkbox">
+            {{ form.allow_download }}
+            <span class="lv-checkbox-label">Allow downloads</span>
+          </label>
+        </div>
+
+        <div class="lv-form-group">
+          <label class="lv-checkbox">
+            {{ form.allow_favorites }}
+            <span class="lv-checkbox-label">Allow favorites</span>
+          </label>
+        </div>
+
+        <div class="lv-form-group">
+          <label class="lv-checkbox">
+            {{ form.is_active }}
+            <span class="lv-checkbox-label">Active</span>
+          </label>
+        </div>
+
+        <div class="lv-form-actions">
+          <button type="submit" class="lv-btn lv-btn-primary">Create Gallery</button>
+          <a href="{% url 'gallery:gallery_manage_list' %}" class="lv-btn lv-btn-ghost">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

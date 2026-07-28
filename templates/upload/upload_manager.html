@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Upload Manager{% endblock %}
+
+{% block breadcrumb_items %}
+<li><span>Upload Manager</span></li>
+{% endblock %}
+
+{% block content %}
+<div class="lv-page">
+  <div class="lv-page-header">
+    <div>
+      <h1 class="lv-page-title">Upload Manager</h1>
+      <p class="lv-page-subtitle">Upload images and videos to your albums</p>
+    </div>
+  </div>
+
+  <div class="lv-card lv-card-glass">
+    <div class="lv-card-body">
+      <div class="lv-form-group">
+        <label for="album-select" class="lv-label">Target Album</label>
+        <select id="album-select" class="lv-input">
+          <option value="">— Select an album —</option>
+          {% for album in albums %}
+            <option value="{{ album.pk }}">{{ album.event.title }} / {{ album.title }}</option>
+          {% endfor %}
+        </select>
+        <p id="album-error" class="lv-form-error hidden">Please select an album before uploading.</p>
+      </div>
+
+      <div id="dropzone" class="lv-upload-zone" role="button" tabindex="0" aria-label="Drop files here or click to browse">
+        <div class="lv-upload-zone-content">
+          <span class="lv-upload-icon" aria-hidden="true">📤</span>
+          <h3 class="lv-upload-title">Drag & drop files here</h3>
+          <p class="lv-upload-hint">or</p>
+          <button type="button" id="browse-btn" class="lv-btn lv-btn-primary">Browse Files</button>
+          <p class="lv-upload-supported">Images: jpg, jpeg, png, webp · Videos: mp4, mov, avi, mkv · Max: 20 MB</p>
+        </div>
+        <input type="file" id="file-input" class="hidden" multiple accept=".jpg,.jpeg,.png,.webp,.mp4,.mov,.avi,.mkv" aria-hidden="true" />
+      </div>
+
+      <div id="overall" class="lv-upload-overall hidden">
+        <div class="lv-upload-overall-header">
+          <span id="overall-label">Uploading...</span>
+          <span id="overall-percent">0%</span>
+        </div>
+        <div class="lv-progress">
+          <div id="overall-bar" class="lv-progress-bar lv-progress-bar-animated"></div>
+        </div>
+      </div>
+
+      <div id="queue" class="lv-upload-queue"></div>
+
+      <div id="upload-empty" class="lv-upload-empty">
+        <div class="lv-upload-empty-icon" aria-hidden="true">📤</div>
+        <h3 class="lv-upload-empty-title">No files selected</h3>
+        <p class="lv-upload-empty-description">Drag and drop files above, or use Browse Files to get started.</p>
+        <button type="button" id="empty-browse-btn" class="lv-btn lv-btn-primary">Browse Files</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<template id="row-template">
+  <div class="lv-upload-row" data-state="pending">
+    <div class="lv-upload-row-preview lv-skeleton" data-preview aria-label="File preview">📄</div>
+    <div class="lv-upload-row-content">
+      <div class="lv-upload-row-header">
+        <p class="lv-upload-row-name" data-name title="file">file</p>
+        <span class="lv-badge lv-badge-secondary" data-badge>Pending</span>
+      </div>
+      <div class="lv-upload-progress">
+        <div class="lv-upload-progress-bar" data-bar></div>
+      </div>
+      <p class="lv-upload-row-status" data-status>Pending...</p>
+    </div>
+    <button type="button" data-cancel class="lv-btn lv-btn-ghost lv-btn-sm" aria-label="Remove file">✕</button>
+  </div>
+</template>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'uploads/js/upload_manager.js' %}" defer></script>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% load i18n unfold %}
+
+<div class="lv-system-panel">
+    <h2 class="lv-system-title">
+        <span class="material-symbols-outlined text-xl text-link">monitoring</span>
+        {% trans "System Overview" %}
+    </h2>
+    <ul class="lv-system-list">
+        <li class="lv-system-item">
+            <span class="lv-system-label">{% trans "Total Users" %}</span>
+            <span class="lv-system-value">{{ dashboard_system_overview.users }}</span>
+        </li>
+        <li class="lv-system-item">
+            <span class="lv-system-label">{% trans "Active Galleries" %}</span>
+            <span class="lv-system-value">{{ dashboard_system_overview.active_galleries }}</span>
+        </li>
+        <li class="lv-system-item">
+            <span class="lv-system-label">{% trans "Password Protected Galleries" %}</span>
+            <span class="lv-system-value">{{ dashboard_system_overview.password_protected_galleries }}</span>
+        </li>
+        <li class="lv-system-item">
+            <span class="lv-system-label">{% trans "Public Galleries" %}</span>
+            <span class="lv-system-value">{{ dashboard_system_overview.public_galleries }}</span>
+        </li>
+    </ul>
+</div>

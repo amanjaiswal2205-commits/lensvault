@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Profile &middot; {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="lv-page">
+  <div class="lv-page-header">
+    <div>
+      <h1 class="lv-page-title">Profile</h1>
+      <p class="lv-page-subtitle">Manage your account settings</p>
+    </div>
+  </div>
+
+  <div class="lv-profile-layout">
+    <div class="lv-profile-sidebar">
+      <div class="lv-card lv-card-glass">
+        <div class="lv-card-body lv-profile-card">
+          <div class="lv-profile-avatar">
+            {% if user.profile_photo %}
+              <img src="{{ user.profile_photo.url }}" alt="{{ user.display_name }}" />
+            {% else %}
+              <span>{{ user.display_name|first|upper }}</span>
+            {% endif %}
+          </div>
+          <h2 class="lv-profile-name">{{ user.display_name }}</h2>
+          <p class="lv-profile-email">{{ user.email }}</p>
+          <div class="lv-profile-badges">
+            {% if user.is_verified %}
+              <span class="lv-badge lv-badge-success">✓ Verified</span>
+            {% else %}
+              <span class="lv-badge lv-badge-warning">⚠ Not verified</span>
+            {% endif %}
+            {% if user.is_staff %}
+              <span class="lv-badge lv-badge-info">Staff</span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lv-profile-content">
+      <div class="lv-card lv-card-glass">
+        <div class="lv-card-header">
+          <h3 class="lv-card-title">Account Information</h3>
+        </div>
+        <div class="lv-card-body">
+          <dl class="lv-profile-details">
+            <div class="lv-profile-detail">
+              <dt>Full Name</dt>
+              <dd>{{ user.full_name|default:"—" }}</dd>
+            </div>
+            <div class="lv-profile-detail">
+              <dt>Email</dt>
+              <dd>{{ user.email }}</dd>
+            </div>
+            <div class="lv-profile-detail">
+              <dt>Mobile</dt>
+              <dd>{{ user.mobile_number|default:"—" }}</dd>
+            </div>
+            <div class="lv-profile-detail">
+              <dt>Date of Birth</dt>
+              <dd>{{ user.date_of_birth|default:"—" }}</dd>
+            </div>
+            <div class="lv-profile-detail">
+              <dt>Gender</dt>
+              <dd>{{ user.get_gender_display|default:"—" }}</dd>
+            </div>
+            <div class="lv-profile-detail">
+              <dt>Location</dt>
+              <dd>{{ user.city|default:"" }}{% if user.state %}, {{ user.state }}{% endif %}{% if user.country %}, {{ user.country }}{% endif %}{% if not user.city and not user.state and not user.country %}—{% endif %}</dd>
+            </div>
+            <div class="lv-profile-detail">
+              <dt>Joined</dt>
+              <dd>{{ user.date_joined|date:"F j, Y" }}</dd>
+            </div>
+            <div class="lv-profile-detail">
+              <dt>Last Login</dt>
+              <dd>{{ user.last_login|date:"F j, Y H:i"|default:"—" }}</dd>
+            </div>
+          </dl>
+          <div class="lv-profile-actions">
+            <a href="{% url 'accounts:edit_profile' %}" class="lv-btn lv-btn-primary">Edit Profile</a>
+            <a href="{% url 'accounts:change_password' %}" class="lv-btn lv-btn-secondary">Change Password</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,252 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_css %}
+<link rel="stylesheet" href="{% static 'css/pages/dashboard.css' %}" />
+{% endblock %}
+
+{% block title %}Analytics{% endblock %}
+
+{% block content %}
+<div class="lv-dashboard">
+  {% include "components/sidebar.html" %}
+
+  <div class="lv-main-content">
+    <header class="lv-topbar">
+      <div>
+        <h1 class="lv-page-title">Analytics</h1>
+        <p class="lv-page-subtitle">Gallery performance overview</p>
+      </div>
+      <div class="lv-topbar-actions">
+        <form method="get" class="lv-days-form">
+          <label for="days-select" class="lv-days-label">Range:</label>
+          <select id="days-select" name="days" onchange="this.form.submit()">
+            {% for opt in days_options %}
+            <option value="{{ opt.value }}" {% if selected_days == opt.value %}selected{% endif %}>{{ opt.label }}</option>
+            {% endfor %}
+          </select>
+        </form>
+      </div>
+    </header>
+
+    <div class="lv-container lv-dashboard-content">
+      <div class="lv-stats-grid">
+        <div class="lv-stat-card lv-stat-card-glass">
+          <div class="lv-stat-icon">🖼️</div>
+          <div class="lv-stat-content">
+            <p class="lv-stat-label">Total Galleries</p>
+            <p class="lv-stat-value">{{ stats.total_galleries }}</p>
+          </div>
+        </div>
+        <div class="lv-stat-card lv-stat-card-glass">
+          <div class="lv-stat-icon">👁️</div>
+          <div class="lv-stat-content">
+            <p class="lv-stat-label">Total Visits</p>
+            <p class="lv-stat-value">{{ stats.total_visits }}</p>
+          </div>
+        </div>
+        <div class="lv-stat-card lv-stat-card-glass">
+          <div class="lv-stat-icon">⬇️</div>
+          <div class="lv-stat-content">
+            <p class="lv-stat-label">Total Downloads</p>
+            <p class="lv-stat-value">{{ stats.total_downloads }}</p>
+          </div>
+        </div>
+        <div class="lv-stat-card lv-stat-card-glass">
+          <div class="lv-stat-icon">⭐</div>
+          <div class="lv-stat-content">
+            <p class="lv-stat-label">Total Favorites</p>
+            <p class="lv-stat-value">{{ stats.total_favorites }}</p>
+          </div>
+        </div>
+        <div class="lv-stat-card lv-stat-card-glass">
+          <div class="lv-stat-icon">✅</div>
+          <div class="lv-stat-content">
+            <p class="lv-stat-label">Active Galleries</p>
+            <p class="lv-stat-value">{{ stats.active_galleries }}</p>
+          </div>
+        </div>
+        <div class="lv-stat-card lv-stat-card-glass">
+          <div class="lv-stat-icon">🔒</div>
+          <div class="lv-stat-content">
+            <p class="lv-stat-label">Password Protected</p>
+            <p class="lv-stat-value">{{ stats.protected_galleries }}</p>
+          </div>
+        </div>
+        <div class="lv-stat-card lv-stat-card-glass">
+          <div class="lv-stat-icon">🔐</div>
+          <div class="lv-stat-content">
+            <p class="lv-stat-label">Private Galleries</p>
+            <p class="lv-stat-value">{{ stats.private_galleries }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="lv-dashboard-grid">
+        <div class="lv-card lv-card-glass">
+          <div class="lv-card-header">
+            <h3 class="lv-card-title">Daily Activity</h3>
+          </div>
+          <div class="lv-card-body">
+            {% if daily %}
+            <div class="lv-table-wrap">
+              <table class="lv-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Visits</th>
+                    <th>Downloads</th>
+                    <th>Favorites</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for row in daily %}
+                  <tr>
+                    <td>{{ row.date }}</td>
+                    <td>{{ row.visits }}</td>
+                    <td>{{ row.downloads }}</td>
+                    <td>{{ row.favorites }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            {% else %}
+            <div class="lv-empty">
+              <div class="lv-empty-icon">📊</div>
+              <h3 class="lv-empty-title">No activity yet</h3>
+              <p class="lv-empty-description">Activity will appear here as clients interact with galleries.</p>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="lv-card lv-card-glass">
+          <div class="lv-card-header">
+            <h3 class="lv-card-title">Popular Galleries</h3>
+          </div>
+          <div class="lv-card-body">
+            {% if popular_galleries %}
+            <div class="lv-table-wrap">
+              <table class="lv-table">
+                <thead>
+                  <tr>
+                    <th>Gallery</th>
+                    <th>Event</th>
+                    <th>Visits</th>
+                    <th>Downloads</th>
+                    <th>Favorites</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for gallery in popular_galleries %}
+                  <tr>
+                    <td><a href="{% url 'gallery:gallery_manage_detail' gallery.id %}">{{ gallery.name }}</a></td>
+                    <td>{{ gallery.event__title }}</td>
+                    <td>{{ gallery.visit_count }}</td>
+                    <td>{{ gallery.download_count }}</td>
+                    <td>{{ gallery.favorite_count }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            {% else %}
+            <div class="lv-empty">
+              <div class="lv-empty-icon">🏆</div>
+              <h3 class="lv-empty-title">No popular galleries yet</h3>
+              <p class="lv-empty-description">Top galleries will appear here based on visits, downloads, and favorites.</p>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="lv-card lv-card-glass">
+          <div class="lv-card-header">
+            <h3 class="lv-card-title">Popular Media</h3>
+          </div>
+          <div class="lv-card-body">
+            {% if popular_media %}
+            <div class="lv-table-wrap">
+              <table class="lv-table">
+                <thead>
+                  <tr>
+                    <th>Media</th>
+                    <th>Event</th>
+                    <th>Album</th>
+                    <th>Views</th>
+                    <th>Downloads</th>
+                    <th>Favorites</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for media in popular_media %}
+                  <tr>
+                    <td>{{ media.title }}</td>
+                    <td>{{ media.event__title }}</td>
+                    <td>{{ media.album__title }}</td>
+                    <td>{{ media.view_count_media }}</td>
+                    <td>{{ media.downloads }}</td>
+                    <td>{{ media.favorites }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            {% else %}
+            <div class="lv-empty">
+              <div class="lv-empty-icon">📸</div>
+              <h3 class="lv-empty-title">No popular media yet</h3>
+              <p class="lv-empty-description">Top photos will appear here based on views, downloads, and favorites.</p>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="lv-card lv-card-glass">
+          <div class="lv-card-header">
+            <h3 class="lv-card-title">Recent Activity</h3>
+          </div>
+          <div class="lv-card-body">
+            {% if recent_activity %}
+            <div class="lv-table-wrap">
+              <table class="lv-table">
+                <thead>
+                  <tr>
+                    <th>Type</th>
+                    <th>Gallery</th>
+                    <th>Media</th>
+                    <th>Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for item in recent_activity %}
+                  <tr>
+                    <td>
+                      {% if item.type == "visit" %}👁️ Visit
+                      {% elif item.type == "download" %}⬇️ Download
+                      {% elif item.type == "favorite" %}⭐ Favorite
+                      {% endif %}
+                    </td>
+                    <td>{{ item.gallery }}</td>
+                    <td>{{ item.media|default:"-" }}</td>
+                    <td>{{ item.timestamp|default:"-" }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            {% else %}
+            <div class="lv-empty">
+              <div class="lv-empty-icon">🕒</div>
+              <h3 class="lv-empty-title">No recent activity</h3>
+              <p class="lv-empty-description">Recent visits, downloads, and favorites will appear here.</p>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

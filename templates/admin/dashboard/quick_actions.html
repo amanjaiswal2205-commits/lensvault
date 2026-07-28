@@ -1,0 +1,16 @@
+{% load i18n unfold %}
+
+<div class="bg-white border border-base-200 rounded-lg shadow-xs dark:bg-base-900 p-5">
+    <h2 class="font-semibold text-[15px] text-important mb-4 flex items-center gap-2">
+        <span class="material-symbols-outlined text-xl text-link">rocket_launch</span>
+        {% trans "Quick Actions" %}
+    </h2>
+    <div class="lv-quick-actions">
+        {% for action in dashboard_quick_actions %}
+            <a href="{{ action.url }}" class="lv-quick-action">
+                <span class="lv-quick-action-icon material-symbols-outlined">{{ action.icon }}</span>
+                {{ action.label }}
+            </a>
+        {% endfor %}
+    </div>
+</div>

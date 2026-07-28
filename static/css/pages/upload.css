@@ -1,0 +1,254 @@
+/* Upload page styles */
+
+/* --------------------------------------------
+   Upload Zone
+   -------------------------------------------- */
+.lv-upload-zone {
+  border: 2px dashed var(--lv-border-color);
+  border-radius: var(--lv-radius-2xl);
+  padding: 3rem 2rem;
+  text-align: center;
+  transition: all 250ms ease;
+  cursor: pointer;
+  background: var(--lv-bg-secondary);
+  position: relative;
+  overflow: hidden;
+}
+
+.lv-upload-zone::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, var(--lv-primary-50) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 250ms ease;
+}
+
+.lv-upload-zone:hover::before,
+.lv-upload-zone.drag-over::before {
+  opacity: 1;
+}
+
+.lv-upload-zone:hover,
+.lv-upload-zone.drag-over {
+  border-color: var(--lv-primary-500);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1), var(--lv-shadow-lg);
+  transform: translateY(-2px);
+}
+
+.lv-upload-zone.drag-over {
+  transform: scale(1.02) translateY(-2px);
+  border-color: var(--lv-primary-600);
+  background: var(--lv-primary-50);
+}
+
+.lv-upload-zone-content {
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.lv-upload-icon {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  display: block;
+  transition: transform 250ms ease;
+}
+
+.lv-upload-zone:hover .lv-upload-icon {
+  transform: translateY(-4px);
+}
+
+.lv-upload-title {
+  font-size: var(--lv-text-xl);
+  font-weight: var(--lv-font-semibold);
+  color: var(--lv-text-primary);
+  margin: 0;
+}
+
+.lv-upload-hint {
+  font-size: var(--lv-text-sm);
+  color: var(--lv-text-secondary);
+  margin: 0.5rem 0;
+}
+
+.lv-upload-supported {
+  font-size: var(--lv-text-xs);
+  color: var(--lv-text-tertiary);
+  margin: 1rem 0 0;
+}
+
+/* --------------------------------------------
+   Overall Progress
+   -------------------------------------------- */
+.lv-upload-overall {
+  margin-top: 1.5rem;
+}
+
+.lv-upload-overall-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--lv-text-sm);
+  font-weight: 500;
+  color: var(--lv-text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+/* --------------------------------------------
+   Upload Queue
+   -------------------------------------------- */
+.lv-upload-queue {
+  margin-top: 1.5rem;
+}
+
+/* --------------------------------------------
+   Upload Row (selected file card)
+   -------------------------------------------- */
+.lv-upload-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--lv-bg-primary);
+  border: 1px solid var(--lv-border-color);
+  border-radius: var(--lv-radius-xl);
+  margin-bottom: 0.75rem;
+  transition: all 250ms ease;
+  box-shadow: var(--lv-shadow-sm);
+}
+
+.lv-upload-row:hover {
+  box-shadow: var(--lv-shadow-md);
+  border-color: var(--lv-primary-200);
+  transform: translateY(-2px);
+}
+
+[data-theme="dark"] .lv-upload-row:hover {
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.lv-upload-row-preview {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--lv-radius-lg);
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--lv-bg-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  overflow: hidden;
+}
+
+.lv-upload-row-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.lv-upload-row-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.lv-upload-row-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  gap: 0.5rem;
+}
+
+.lv-upload-row-name {
+  font-size: var(--lv-text-sm);
+  font-weight: 500;
+  color: var(--lv-text-primary);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lv-upload-row-size {
+  font-size: var(--lv-text-xs);
+  color: var(--lv-text-tertiary);
+  margin-left: 0.5rem;
+  flex-shrink: 0;
+}
+
+.lv-upload-progress {
+  flex: 1;
+  height: 6px;
+  background: var(--lv-border-color);
+  border-radius: var(--lv-radius-full);
+  overflow: hidden;
+}
+
+.lv-upload-progress-bar {
+  height: 100%;
+  background: var(--lv-gradient-primary);
+  border-radius: var(--lv-radius-full);
+  transition: width 250ms ease;
+  width: 0%;
+}
+
+.lv-progress-bar-animated {
+  animation: lv-progress-shimmer 2s infinite;
+}
+
+.lv-upload-row-status {
+  font-size: var(--lv-text-xs);
+  color: var(--lv-text-tertiary);
+  margin: 0.25rem 0 0;
+}
+
+/* --------------------------------------------
+   Empty State
+   -------------------------------------------- */
+.lv-upload-empty {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: var(--lv-text-secondary);
+}
+
+.lv-upload-empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  opacity: 0.8;
+}
+
+.lv-upload-empty-title {
+  font-size: var(--lv-text-xl);
+  font-weight: var(--lv-font-semibold);
+  color: var(--lv-text-primary);
+  margin: 0 0 0.5rem;
+}
+
+.lv-upload-empty-description {
+  font-size: var(--lv-text-sm);
+  color: var(--lv-text-secondary);
+  margin: 0 0 1.5rem;
+}
+
+/* --------------------------------------------
+   Responsive
+   -------------------------------------------- */
+@media (max-width: 640px) {
+  .lv-upload-zone {
+    padding: 2rem 1rem;
+  }
+
+  .lv-upload-row {
+    flex-wrap: wrap;
+  }
+
+  .lv-upload-row-header {
+    flex-wrap: wrap;
+  }
+
+  .lv-upload-row-preview {
+    width: 40px;
+    height: 40px;
+  }
+}

@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_css %}
+<link rel="stylesheet" href="{% static 'css/pages/dashboard.css' %}" />
+{% endblock %}
+
+{% block title %}Download History{% endblock %}
+
+{% block content %}
+<div class="lv-dashboard">
+  {% include "components/sidebar.html" %}
+
+  <div class="lv-main-content">
+    <header class="lv-topbar">
+      <div>
+        <h1 class="lv-page-title">Download History</h1>
+        <p class="lv-page-subtitle">Client download activity across galleries</p>
+      </div>
+    </header>
+
+    <div class="lv-container lv-dashboard-content">
+      <div class="lv-stats-grid">
+        <div class="lv-stat-card lv-stat-card-glass">
+          <div class="lv-stat-icon">⬇️</div>
+          <div class="lv-stat-content">
+            <p class="lv-stat-label">Total Downloads</p>
+            <p class="lv-stat-value">{{ total_downloads }}</p>
+          </div>
+        </div>
+        <div class="lv-stat-card lv-stat-card-glass">
+          <div class="lv-stat-icon">📅</div>
+          <div class="lv-stat-content">
+            <p class="lv-stat-label">Today</p>
+            <p class="lv-stat-value">{{ downloads_today }}</p>
+          </div>
+        </div>
+        <div class="lv-stat-card lv-stat-card-glass">
+          <div class="lv-stat-icon">7️⃣</div>
+          <div class="lv-stat-content">
+            <p class="lv-stat-label">Last 7 Days</p>
+            <p class="lv-stat-value">{{ downloads_7d }}</p>
+          </div>
+        </div>
+        <div class="lv-stat-card lv-stat-card-glass">
+          <div class="lv-stat-icon">3️⃣</div>
+          <div class="lv-stat-content">
+            <p class="lv-stat-label">Last 30 Days</p>
+            <p class="lv-stat-value">{{ downloads_30d }}</p>
+          </div>
+        </div>
+        {% if most_gallery %}
+        <div class="lv-stat-card lv-stat-card-glass">
+          <div class="lv-stat-icon">🏆</div>
+          <div class="lv-stat-content">
+            <p class="lv-stat-label">Top Gallery</p>
+            <p class="lv-stat-value"><a href="{% url 'gallery:gallery_manage_detail' most_gallery.gallery__slug %}">{{ most_gallery.gallery__name }}</a></p>
+          </div>
+        </div>
+        {% endif %}
+        {% if most_photo %}
+        <div class="lv-stat-card lv-stat-card-glass">
+          <div class="lv-stat-icon">📸</div>
+          <div class="lv-stat-content">
+            <p class="lv-stat-label">Top Photo</p>
+            <p class="lv-stat-value">{{ most_photo.photo__title }}</p>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="lv-card lv-card-glass">
+        <div class="lv-card-header">
+          <h3 class="lv-card-title">Filters</h3>
+        </div>
+        <div class="lv-card-body">
+          <form method="get" class="lv-filters-form">
+            <div class="lv-filter-row">
+              <div class="lv-filter-field">
+                <label for="gallery">Gallery</label>
+                <select id="gallery" name="gallery">
+                  <option value="">All Galleries</option>
+                  {% for g in available_galleries %}
+                  <option value="{{ g.slug }}" {% if selected_gallery == g.slug %}selected{% endif %}>{{ g.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="lv-filter-field">
+                <label for="event">Event</label>
+                <select id="event" name="event">
+                  <option value="">All Events</option>
+                  {% for e in available_events %}
+                  <option value="{{ e.slug }}" {% if selected_event == e.slug %}selected{% endif %}>{{ e.title }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="lv-filter-field">
+                <label for="date_from">From</label>
+                <input type="date" id="date_from" name="date_from" value="{{ date_from }}">
+              </div>
+              <div class="lv-filter-field">
+                <label for="date_to">To</label>
+                <input type="date" id="date_to" name="date_to" value="{{ date_to }}">
+              </div>
+              <div class="lv-filter-actions">
+                <button type="submit" class="lv-btn lv-btn-primary lv-btn-sm">Apply</button>
+                <a href="{% url 'dashboard:downloads' %}" class="lv-btn lv-btn-ghost lv-btn-sm">Reset</a>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="lv-card lv-card-glass">
+        <div class="lv-card-header">
+          <h3 class="lv-card-title">Downloads</h3>
+        </div>
+        <div class="lv-card-body">
+          {% if page_obj %}
+          <div class="lv-table-wrap">
+            <table class="lv-table">
+              <thead>
+                <tr>
+                  <th>Date / Time</th>
+                  <th>Gallery</th>
+                  <th>Event</th>
+                  <th>Album</th>
+                  <th>Photo / Media</th>
+                  <th>Session</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for log in page_obj %}
+                <tr>
+                  <td>{{ log.downloaded_at|date:"Y-m-d H:i" }}</td>
+                  <td><a href="{% url 'gallery:gallery_manage_detail' log.gallery.slug %}">{{ log.gallery.name }}</a></td>
+                  <td><a href="{% url 'events:event_detail' log.gallery.event.slug %}">{{ log.gallery.event.title }}</a></td>
+                  <td>{{ log.photo.album.title }}</td>
+                  <td><a href="{% url 'media:media_detail' log.photo.uuid %}">{{ log.photo.title }}</a></td>
+                  <td>{{ log.session_id|truncatechars:8 }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% if page_obj.has_other_pages %}
+          <div class="lv-pagination">
+            {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if selected_gallery %}&gallery={{ selected_gallery }}{% endif %}{% if selected_event %}&event={{ selected_event }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}" class="lv-btn lv-btn-ghost lv-btn-sm">Previous</a>
+            {% endif %}
+            <span class="lv-pagination-info">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if selected_gallery %}&gallery={{ selected_gallery }}{% endif %}{% if selected_event %}&event={{ selected_event }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}" class="lv-btn lv-btn-ghost lv-btn-sm">Next</a>
+            {% endif %}
+          </div>
+          {% endif %}
+          {% else %}
+          <div class="lv-empty">
+            <div class="lv-empty-icon">⬇️</div>
+            <h3 class="lv-empty-title">No downloads recorded yet</h3>
+            <p class="lv-empty-description">Download activity will appear here as clients download photos.</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

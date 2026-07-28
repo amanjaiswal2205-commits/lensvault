@@ -1,0 +1,17 @@
+{% load static %}
+<div class="lv-modal-overlay" id="{{ modal_id }}">
+  <div class="lv-modal" onclick="event.stopPropagation()">
+    <div class="lv-modal-header">
+      <h3 class="lv-modal-title">{{ title }}</h3>
+      <button class="lv-modal-close" onclick="closeModal('{{ modal_id }}')" aria-label="Close modal">&times;</button>
+    </div>
+    <div class="lv-modal-body">
+      {{ content|safe }}
+    </div>
+    {% if footer %}
+    <div class="lv-modal-footer">
+      {{ footer }}
+    </div>
+    {% endif %}
+  </div>
+</div>

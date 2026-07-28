@@ -1,0 +1,13 @@
+{% load static %}
+{# Reusable button patterns #}
+{% if href %}
+  <a href="{{ href }}" class="lv-btn lv-btn-{{ variant|default:'primary' }} lv-btn-{{ size|default:'md' }}{% if block_class %} {{ block_class }}{% endif %}"{% if target %} target="{{ target }}"{% endif %}>
+    {% if icon %}<span>{{ icon }}</span>{% endif %}
+    {{ label|default:"Button" }}
+  </a>
+{% else %}
+  <button type="{{ type|default:'button' }}" class="lv-btn lv-btn-{{ variant|default:'primary' }} lv-btn-{{ size|default:'md' }}{% if block_class %} {{ block_class }}{% endif %}">
+    {% if icon %}<span>{{ icon }}</span>{% endif %}
+    {{ label|default:"Button" }}
+  </button>
+{% endif %}

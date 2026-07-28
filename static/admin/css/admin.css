@@ -1,0 +1,206 @@
+/* ============================================
+   LensVault Admin Design System
+   Reusable Design Tokens
+   ============================================ */
+
+/* --------------------------------------------
+   Colors
+   -------------------------------------------- */
+:root {
+  --lv-primary: #6366f1;
+  --lv-secondary: #8b5cf6;
+  --lv-success: #10b981;
+  --lv-warning: #f59e0b;
+  --lv-danger: #ef4444;
+  --lv-bg: #ffffff;
+  --lv-surface: #f8fafc;
+  --lv-border: #e2e8f0;
+}
+
+/* --------------------------------------------
+   Typography
+   -------------------------------------------- */
+:root {
+  --lv-font-heading: 'Inter', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --lv-font-body: 'Inter', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --lv-font-small: 0.75rem;
+  --lv-font-base: 0.875rem;
+  --lv-font-lg: 1rem;
+  --lv-font-heading-lg: 1.125rem;
+  --lv-font-heading-xl: 1.25rem;
+  --lv-font-heading-2xl: 1.5rem;
+}
+
+/* --------------------------------------------
+   Border Radius
+   -------------------------------------------- */
+:root {
+  --lv-radius-sm: 0.25rem;
+  --lv-radius-md: 0.375rem;
+  --lv-radius-lg: 0.5rem;
+  --lv-radius-xl: 0.75rem;
+  --lv-radius-2xl: 1rem;
+}
+
+/* --------------------------------------------
+   Spacing
+   -------------------------------------------- */
+:root {
+  --lv-space-8: 0.5rem;
+  --lv-space-12: 0.75rem;
+  --lv-space-16: 1rem;
+  --lv-space-24: 1.5rem;
+  --lv-space-32: 2rem;
+  --lv-space-40: 2.5rem;
+}
+
+/* --------------------------------------------
+   Shadow
+   -------------------------------------------- */
+:root {
+  --lv-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --lv-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --lv-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================
+    Sidebar
+    ============================================ */
+
+.sidebar {
+    width: 280px;
+    background-color: var(--lv-bg);
+    border-right: 1px solid var(--lv-border);
+    box-shadow: var(--lv-shadow-sm);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-logo {
+    padding: var(--lv-space-32) var(--lv-space-24) var(--lv-space-24);
+}
+
+.sidebar-logo-link {
+    display: flex;
+    align-items: center;
+    gap: var(--lv-space-12);
+    text-decoration: none;
+    color: inherit;
+}
+
+.sidebar-logo-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--lv-gradient-primary);
+    border-radius: var(--lv-radius-xl);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: #ffffff;
+    box-shadow: var(--lv-shadow-md);
+}
+
+.sidebar-logo-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+}
+
+.sidebar-logo-subtitle {
+    font-size: 12px;
+    font-weight: 500;
+    color: #64748b;
+    line-height: 1.2;
+    letter-spacing: 0.02em;
+}
+
+.sidebar-nav {
+    flex: 1;
+    padding: 0 var(--lv-space-12) var(--lv-space-24);
+    overflow-y: auto;
+}
+
+.nav-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--lv-space-24);
+}
+
+.nav-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--lv-space-8);
+}
+
+.nav-group-title {
+    font-size: var(--lv-font-small);
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding-left: var(--lv-space-12);
+    margin-bottom: var(--lv-space-4);
+}
+
+.nav-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--lv-space-8);
+}
+
+.nav-item a {
+    display: flex;
+    align-items: center;
+    height: 52px;
+    padding: 0 var(--lv-space-12);
+    border-radius: 16px;
+    gap: 12px;
+    color: #334155;
+    font-size: var(--lv-font-base);
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.25s ease;
+}
+
+.nav-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    font-size: 20px;
+    flex-shrink: 0;
+    transition: color 0.2s ease;
+}
+
+.nav-label {
+    white-space: nowrap;
+}
+
+.nav-item a:hover {
+    background-color: rgba(99, 102, 241, 0.08);
+    color: #0f172a;
+}
+
+.nav-item a:hover .nav-icon {
+    color: var(--lv-primary);
+}
+
+.nav-item a.active {
+    background: var(--lv-gradient-primary);
+    color: #ffffff;
+    box-shadow: var(--lv-shadow-lg);
+}
+
+.nav-item a.active .nav-icon {
+    color: #ffffff;
+}
+
+.nav-item a.active:hover {
+    background: linear-gradient(135deg, var(--lv-secondary, #8b5cf6) 0%, var(--lv-primary, #6366f1) 100%);
+    box-shadow: var(--lv-shadow-lg), 0 0 20px rgba(99, 102, 241, 0.35);
+}

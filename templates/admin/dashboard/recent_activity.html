@@ -1,0 +1,89 @@
+{% load i18n unfold %}
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+    <div class="lv-activity-panel">
+        <h2 class="lv-activity-title">
+            <span class="material-symbols-outlined text-xl text-link">photo_auto</span>
+            {% trans "Latest Galleries" %}
+        </h2>
+        {% if dashboard_recent_galleries %}
+            <ul class="lv-activity-list">
+                {% for gallery in dashboard_recent_galleries %}
+                    <li class="lv-activity-item">
+                        <a href="{% url 'admin:gallery_clientgallery_change' gallery.pk %}" class="lv-activity-link">
+                            {{ gallery.name }}
+                        </a>
+                        <span class="lv-activity-meta">{{ gallery.created_at|date:"M d, Y" }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="lv-activity-empty">{% trans "No galleries yet." %}</p>
+        {% endif %}
+    </div>
+
+    <div class="lv-activity-panel">
+        <h2 class="lv-activity-title">
+            <span class="material-symbols-outlined text-xl text-link">event</span>
+            {% trans "Latest Events" %}
+        </h2>
+        {% if dashboard_recent_events %}
+            <ul class="lv-activity-list">
+                {% for event in dashboard_recent_events %}
+                    <li class="lv-activity-item">
+                        <a href="{% url 'admin:events_event_change' event.pk %}" class="lv-activity-link">
+                            {{ event.title }}
+                        </a>
+                        <span class="lv-activity-meta">{{ event.created_at|date:"M d, Y" }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="lv-activity-empty">{% trans "No events yet." %}</p>
+        {% endif %}
+    </div>
+
+    <div class="lv-activity-panel">
+        <h2 class="lv-activity-title">
+            <span class="material-symbols-outlined text-xl text-link">download</span>
+            {% trans "Latest Downloads" %}
+        </h2>
+        {% if dashboard_recent_downloads %}
+            <ul class="lv-activity-list">
+                {% for log in dashboard_recent_downloads %}
+                    <li class="lv-activity-item">
+                        <a href="{% url 'admin:gallery_gallerydownloadlog_change' log.pk %}" class="lv-activity-link">
+                            {{ log.photo.title|default:"Untitled" }}
+                        </a>
+                        <span class="lv-activity-meta">{{ log.downloaded_at|date:"M d, Y" }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="lv-activity-empty">{% trans "No downloads yet." %}</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+    <div class="lv-activity-panel">
+        <h2 class="lv-activity-title">
+            <span class="material-symbols-outlined text-xl text-link">visibility</span>
+            {% trans "Latest Visits" %}
+        </h2>
+        {% if dashboard_recent_visits %}
+            <ul class="lv-activity-list">
+                {% for visit in dashboard_recent_visits %}
+                    <li class="lv-activity-item">
+                        <a href="{% url 'admin:gallery_clientgallery_change' visit.gallery.pk %}" class="lv-activity-link">
+                            {{ visit.gallery.name }}
+                        </a>
+                        <span class="lv-activity-meta">{{ visit.visited_at|date:"M d, Y" }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="lv-activity-empty">{% trans "No visits yet." %}</p>
+        {% endif %}
+    </div>
+</div>

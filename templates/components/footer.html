@@ -1,0 +1,67 @@
+{% load static %}
+<footer class="lv-footer">
+  <div class="lv-container">
+    <div class="lv-footer-grid">
+      <div class="lv-footer-brand">
+        <a href="{% url 'core:home' %}" class="lv-footer-logo">
+          <svg class="lv-footer-logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M16.5 6.5a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z"/>
+            <path d="M2.25 12h19.5"/>
+            <path d="M15.91 10.59l-2.35 2.35a.75.75 0 01-1.06 0l-2.35-2.35"/>
+          </svg>
+          <span>{{ site_settings.site_name|default:SITE_NAME }}</span>
+        </a>
+        <p class="lv-footer-description">
+          {{ site_settings.site_description|default:"Professional photography event management and client gallery platform." }}
+        </p>
+        <div class="lv-footer-social">
+          {% if site_settings.facebook_url %}<a href="{{ site_settings.facebook_url }}" class="lv-social-link" aria-label="Facebook">f</a>{% endif %}
+          {% if site_settings.instagram_url %}<a href="{{ site_settings.instagram_url }}" class="lv-social-link" aria-label="Instagram">📷</a>{% endif %}
+          {% if site_settings.youtube_url %}<a href="{{ site_settings.youtube_url }}" class="lv-social-link" aria-label="YouTube">▶</a>{% endif %}
+          {% if site_settings.linkedin_url %}<a href="{{ site_settings.linkedin_url }}" class="lv-social-link" aria-label="LinkedIn">in</a>{% endif %}
+        </div>
+      </div>
+      <div class="lv-footer-links">
+        <h4>Platform</h4>
+        <a href="{% url 'events:event_list' %}">Events</a>
+        <a href="{% url 'albums:album_list' %}">Albums</a>
+        <a href="{% url 'gallery:event_gallery' %}">Gallery</a>
+        <a href="{% url 'media:media_list' %}">Media Library</a>
+      </div>
+      <div class="lv-footer-links">
+        <h4>Account</h4>
+        {% if user.is_authenticated %}
+          <a href="{% url 'accounts:profile' %}">Profile</a>
+          <a href="{% url 'dashboard:index' %}">Dashboard</a>
+          <form method="post" action="{% url 'accounts:logout' %}" class="lv-inline">
+            {% csrf_token %}
+            <button type="submit" class="lv-footer-link-btn">Logout</button>
+          </form>
+        {% else %}
+          <a href="{% url 'accounts:login' %}">Login</a>
+          <a href="{% url 'accounts:register' %}">Register</a>
+        {% endif %}
+      </div>
+      <div class="lv-footer-links">
+        <h4>Support</h4>
+        {% if site_settings.support_email %}
+          <a href="mailto:{{ site_settings.support_email }}">Contact Us</a>
+        {% else %}
+          <a href="{% url 'core:home' %}">Contact Us</a>
+        {% endif %}
+        <a href="{% url 'core:home' %}">Help Center</a>
+        <a href="{% url 'core:home' %}">Documentation</a>
+        <a href="{% url 'core:home' %}">Privacy Policy</a>
+      </div>
+    </div>
+    <div class="lv-footer-bottom">
+      <p>&copy; {% now "Y" %} {{ site_settings.site_name|default:SITE_NAME }}. All rights reserved.</p>
+      {% if site_settings.support_email or site_settings.phone %}
+        <p class="lv-footer-contact">
+          {% if site_settings.support_email %}{{ site_settings.support_email }}{% endif %}
+          {% if site_settings.phone %} · {{ site_settings.phone }}{% endif %}
+        </p>
+      {% endif %}
+    </div>
+  </div>
+</footer>

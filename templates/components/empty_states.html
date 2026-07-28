@@ -1,0 +1,9 @@
+{% load static %}
+<div class="lv-empty">
+  <div class="lv-empty-icon">{{ icon|default:"📭" }}</div>
+  <h3 class="lv-empty-title">{{ title|default:"No data found" }}</h3>
+  <p class="lv-empty-description">{{ description|default:"There's nothing here yet. Start by creating your first item." }}</p>
+  {% if cta_text and cta_url %}
+  <a href="{{ cta_url }}" class="lv-btn lv-btn-primary">{{ cta_text }}</a>
+  {% endif %}
+</div>

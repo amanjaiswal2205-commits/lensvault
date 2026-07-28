@@ -1,0 +1,68 @@
+{% extends "gallery/base_gallery.html" %}
+{% load static %}
+
+{% block title %}{{ media_item.title }} &middot; Gallery{% endblock %}
+
+{% block content %}
+<div class="container mx-auto max-w-5xl px-4 py-8" id="media-detail" data-uuid="{{ media_item.uuid }}">
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="{% url 'gallery:event_gallery' %}" class="hover:text-indigo-600">Gallery</a>
+    <span class="mx-1">/</span>
+    <a href="{% url 'gallery:event_gallery_detail' event.slug %}" class="hover:text-indigo-600">{{ event.title }}</a>
+    <span class="mx-1">/</span>
+    <a href="?album={{ album.slug }}" class="hover:text-indigo-600">{{ album.title }}</a>
+  </nav>
+
+  <div class="bg-white rounded-2xl shadow-sm ring-1 ring-black/5 overflow-hidden">
+    {% if media_item.is_video %}
+      <div class="bg-black flex items-center justify-center" style="min-height:60vh;">
+        <video id="media-player" controls playsinline class="max-h-[70vh] w-auto" {% if media_item.thumbnail %}poster="{{ media_item.thumbnail.url }}"{% endif %}>
+          <source src="{{ media_item.file.url }}" type="{{ media_item.mime_type|default:'video/mp4' }}">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    {% else %}
+      <div class="bg-gray-900 flex items-center justify-center overflow-hidden" style="min-height:60vh;">
+        <img id="zoomable" src="{{ media_item.file.url }}" alt="{{ media_item.title }}"
+             class="max-h-[70vh] w-auto object-contain transition-transform duration-200 cursor-zoom-in"
+             style="transform:scale(1);">
+      </div>
+    {% endif %}
+
+    <div class="p-6">
+      <div class="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900">{{ media_item.title }}</h1>
+          <p class="text-sm text-gray-500 mt-1">
+            📁 {{ album.title }} · 📅 {{ event.title }}
+            {% if media_item.width %}· {{ media_item.width }}×{{ media_item.height }}{% endif %}
+          </p>
+        </div>
+        <div class="flex gap-2">
+          {% if prev_media %}
+            <a id="nav-prev" href="{% url 'gallery:media_detail' prev_media.uuid %}"
+               class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition">← Prev</a>
+          {% endif %}
+          {% if next_media %}
+            <a id="nav-next" href="{% url 'gallery:media_detail' next_media.uuid %}"
+               class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition">Next →</a>
+          {% endif %}
+          <a href="{{ media_item.file.url }}" download
+             class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition">↓ Download</a>
+        </div>
+      </div>
+      {% if media_item.description %}<p class="mt-4 text-gray-700">{{ media_item.description }}</p>{% endif %}
+    </div>
+  </div>
+
+  {% if media_item.is_image %}
+    {# Lightbox overlay for full-screen + zoom #}
+    <div id="lightbox" class="fixed inset-0 bg-black/90 hidden items-center justify-center z-50 p-4">
+      <button id="lightbox-close" class="absolute top-4 right-4 text-white text-3xl">&times;</button>
+      <button id="lightbox-prev" class="absolute left-4 text-white text-4xl" aria-label="Previous">‹</button>
+      <img id="lightbox-img" src="{{ media_item.file.url }}" class="max-h-[90vh] max-w-[90vw] object-contain cursor-zoom-in">
+      <button id="lightbox-next" class="absolute right-4 text-white text-4xl" aria-label="Next">›</button>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

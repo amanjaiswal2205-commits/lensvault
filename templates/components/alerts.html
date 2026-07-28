@@ -1,0 +1,11 @@
+{% load static %}
+<div class="lv-alert lv-alert-{{ type|default:'info' }}">
+  <span class="lv-alert-icon">{% if type == 'success' %}✓{% elif type == 'danger' %}✕{% elif type == 'warning' %}⚠{% else %}ℹ{% endif %}</span>
+  <div class="lv-alert-content">
+    {% if title %}<h4 class="lv-alert-title">{{ title }}</h4>{% endif %}
+    <p class="lv-alert-message">{{ message }}</p>
+  </div>
+  {% if dismissible %}
+  <button class="lv-alert-close" onclick="this.parentElement.remove()" aria-label="Close">&times;</button>
+  {% endif %}
+</div>

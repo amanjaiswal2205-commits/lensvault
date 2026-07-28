@@ -1,0 +1,112 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>
+    {% if seo_settings and seo_settings.meta_title %}
+      {{ seo_settings.meta_title }}
+    {% else %}
+      {% block title %}{{ SITE_NAME }}{% endblock %}
+    {% endif %}
+  </title>
+
+  {% if site_settings and site_settings.favicon %}
+    <link rel="icon" type="image/png" href="{{ site_settings.favicon.url }}" />
+  {% endif %}
+
+  {% if seo_settings and seo_settings.meta_description %}
+    <meta name="description" content="{{ seo_settings.meta_description }}" />
+  {% elif description %}
+    <meta name="description" content="{% block description %}{% endblock %}" />
+  {% endif %}
+
+  {% if seo_settings %}
+    {% if seo_settings.meta_keywords %}
+      <meta name="keywords" content="{{ seo_settings.meta_keywords }}" />
+    {% endif %}
+    {% if seo_settings.og_title %}
+      <meta property="og:title" content="{{ seo_settings.og_title }}" />
+    {% endif %}
+    {% if seo_settings.og_description %}
+      <meta property="og:description" content="{{ seo_settings.og_description }}" />
+    {% endif %}
+    {% if seo_settings.og_image %}
+      <meta property="og:image" content="{{ seo_settings.og_image.url }}" />
+    {% endif %}
+    {% if seo_settings.canonical_url %}
+      <link rel="canonical" href="{{ seo_settings.canonical_url }}" />
+    {% endif %}
+    {% if seo_settings.robots %}
+      <meta name="robots" content="{{ seo_settings.robots }}" />
+    {% endif %}
+  {% endif %}
+
+  <meta name="theme-color" content="#6366f1" />
+
+  {% if theme_settings %}
+  <style id="theme-settings">
+    :root {
+      --lv-primary: {{ theme_settings.primary_color }};
+      --lv-secondary: {{ theme_settings.secondary_color }};
+      --lv-accent: {{ theme_settings.accent_color }};
+      --lv-radius: {{ theme_settings.border_radius_css }};
+      --lv-container-width: {{ theme_settings.container_width }}px;
+      --lv-card-shadow: {{ theme_settings.card_shadow_css }};
+      --lv-btn-radius: {{ theme_settings.button_border_radius_css }};
+    }
+  </style>
+  {% endif %}
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{% static 'css/tailwind.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/design-system.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/base.css' %}" />
+  {% block page_css %}{% endblock %}
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="lv-body">
+  <div id="lv-loading-bar"></div>
+
+  {% block body %}
+    {% if messages %}
+      <div class="lv-toast-container">
+        {% for message in messages %}
+          <div class="lv-toast lv-toast-{{ message.tags }}" role="alert">
+            <span>{{ message }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% block navbar %}
+      {% include "components/navbar.html" %}
+    {% endblock %}
+
+    <main id="lv-main-content">
+      {% block content %}{% endblock %}
+    </main>
+
+    {% block footer %}
+      {% if not request.resolver_match.url_name == 'home' %}
+        {% include "components/footer.html" %}
+      {% endif %}
+    {% endblock %}
+
+    <button id="lv-scroll-top" class="lv-scroll-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" aria-label="Scroll to top">
+      <svg class="lv-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+      </svg>
+    </button>
+
+    {% block page_js %}{% endblock %}
+    {% block extra_scripts %}{% endblock %}
+    <script src="{% static 'js/design-system.js' %}" defer></script>
+  {% endblock %}
+</body>
+</html>

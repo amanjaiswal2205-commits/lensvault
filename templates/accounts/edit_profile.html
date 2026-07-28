@@ -1,0 +1,58 @@
+{% extends "accounts/base_profile.html" %}
+
+{% block title %}Edit Profile &middot; {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+{% include "accounts/partials/messages.html" %}
+<div class="lv-page">
+  <div class="lv-page-header">
+    <div>
+      <h1 class="lv-page-title">Edit Profile</h1>
+      <p class="lv-page-subtitle">Update your personal information</p>
+    </div>
+  </div>
+
+  <div class="lv-card lv-card-glass">
+    <div class="lv-card-body">
+      <form method="post" action="{% url 'accounts:edit_profile' %}" enctype="multipart/form-data" data-loading novalidate>
+        {% csrf_token %}
+
+        <div class="lv-form-group">
+          <label class="lv-label">Profile Photo</label>
+          <div class="lv-profile-avatar lv-profile-avatar-lg">
+            {% if form.instance.profile_photo %}
+              <img src="{{ form.instance.profile_photo.url }}" alt="Profile" />
+            {% else %}
+              <span>{{ user.display_name|first|upper }}</span>
+            {% endif %}
+          </div>
+          {{ form.profile_photo }}
+          {% for error in form.profile_photo.errors %}<p class="lv-form-error">{{ error }}</p>{% endfor %}
+        </div>
+
+        {% for field in form %}
+          {% if field.name != 'profile_photo' %}
+            {% if field.name == 'bio' or field.name == 'address' %}
+              <div class="lv-form-group">
+                <label for="{{ field.id_for_label }}" class="lv-label">{{ field.label }}</label>
+                {{ field }}
+                {% for error in field.errors %}<p class="lv-form-error">{{ error }}</p>{% endfor %}
+              </div>
+            {% else %}
+              {% include "accounts/partials/form_field.html" with field=field %}
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+
+        <div class="lv-profile-actions">
+          <button type="submit" data-loading-btn class="lv-btn lv-btn-primary">
+            <span data-loading-label>Save Changes</span>
+          </button>
+          <a href="{% url 'accounts:profile' %}" class="lv-btn lv-btn-secondary">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

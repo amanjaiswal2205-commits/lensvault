@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_css %}
+<link rel="stylesheet" href="{% static 'css/pages/dashboard.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="lv-dashboard">
+  {% include "components/sidebar.html" %}
+
+  <div class="lv-main-content">
+    <header class="lv-topbar">
+      <div>
+        <h1 class="lv-page-title">Dashboard</h1>
+        <p class="lv-page-subtitle">Welcome back, {{ user.display_name }}!</p>
+      </div>
+      <div class="lv-topbar-actions">
+        <button class="lv-sidebar-mobile-trigger" onclick="openMobileSidebar()" aria-label="Open menu">
+          <svg class="lv-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
+          </svg>
+        </button>
+        <button class="lv-btn lv-btn-ghost lv-btn-sm" onclick="toggleTheme()" aria-label="Toggle theme">
+          <span id="theme-icon">🌙</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="lv-container lv-dashboard-content">
+      <div class="lv-stats-grid">
+        <div class="lv-stat-card lv-stat-card-glass">
+          <div class="lv-stat-icon">📅</div>
+          <div class="lv-stat-content">
+            <p class="lv-stat-label">Events</p>
+            <p class="lv-stat-value">{{ event_count }}</p>
+          </div>
+        </div>
+        <div class="lv-stat-card lv-stat-card-glass">
+          <div class="lv-stat-icon">🖼️</div>
+          <div class="lv-stat-content">
+            <p class="lv-stat-label">Albums</p>
+            <p class="lv-stat-value">{{ album_count }}</p>
+          </div>
+        </div>
+        <div class="lv-stat-card lv-stat-card-glass">
+          <div class="lv-stat-icon">📸</div>
+          <div class="lv-stat-content">
+            <p class="lv-stat-label">Photos</p>
+            <p class="lv-stat-value">{{ media_count }}</p>
+          </div>
+        </div>
+        <div class="lv-stat-card lv-stat-card-glass">
+          <div class="lv-stat-icon">💾</div>
+          <div class="lv-stat-content">
+            <p class="lv-stat-label">Storage</p>
+            <p class="lv-stat-value">{{ storage_used_gb }} GB / {{ storage_total_gb }} GB</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="lv-quick-actions">
+        <a href="{% url 'events:event_create' %}" class="lv-quick-action-card">
+          <div class="lv-quick-action-icon">📅</div>
+          <div>
+            <h3 class="lv-quick-action-title">Create Event</h3>
+            <p class="lv-quick-action-description">Set up a new photography event</p>
+          </div>
+        </a>
+        <a href="{% url 'uploads:upload_manager' %}" class="lv-quick-action-card">
+          <div class="lv-quick-action-icon">📤</div>
+          <div>
+            <h3 class="lv-quick-action-title">Upload Photos</h3>
+            <p class="lv-quick-action-description">Add media to your albums</p>
+          </div>
+        </a>
+        <a href="{% url 'gallery:event_gallery' %}" class="lv-quick-action-card">
+          <div class="lv-quick-action-icon">🖼️</div>
+          <div>
+            <h3 class="lv-quick-action-title">View Gallery</h3>
+            <p class="lv-quick-action-description">Browse stunning collections</p>
+          </div>
+        </a>
+        <a href="{% url 'albums:album_list' %}" class="lv-quick-action-card">
+          <div class="lv-quick-action-icon">📁</div>
+          <div>
+            <h3 class="lv-quick-action-title">Manage Albums</h3>
+            <p class="lv-quick-action-description">Organize your photo albums</p>
+          </div>
+        </a>
+      </div>
+
+      <div class="lv-dashboard-grid">
+        <div class="lv-card lv-card-glass">
+          <div class="lv-card-header">
+            <h3 class="lv-card-title">Recent Events</h3>
+            <a href="{% url 'events:event_list' %}" class="lv-btn lv-btn-sm lv-btn-ghost">View All</a>
+          </div>
+          <div class="lv-card-body">
+            <div class="lv-empty">
+              <div class="lv-empty-icon">📅</div>
+              <h3 class="lv-empty-title">No events yet</h3>
+              <p class="lv-empty-description">Create your first event to get started.</p>
+              <a href="{% url 'events:event_create' %}" class="lv-btn lv-btn-primary">Create Event</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="lv-card lv-card-glass">
+          <div class="lv-card-header">
+            <h3 class="lv-card-title">Storage Usage</h3>
+          </div>
+          <div class="lv-card-body">
+              <div class="lv-storage-card">
+                <div class="lv-storage-info">
+                  <span class="lv-storage-label">Storage</span>
+                  <span class="lv-storage-value">{{ storage_used_gb }} GB / {{ storage_total_gb }} GB</span>
+                </div>
+                <div class="lv-progress">
+                  <div class="lv-progress-bar" style="width: {{ storage_percent }}%"></div>
+                </div>
+                <p class="lv-storage-hint">{{ storage_percent }}% used</p>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% load static %}
+{% if request.resolver_match.url_name != 'home' %}
+<nav class="lv-breadcrumb" aria-label="Breadcrumb">
+  <ol class="lv-breadcrumb-list">
+    <li><a href="{% url 'core:home' %}" class="lv-breadcrumb-link">Home</a></li>
+    {% block breadcrumb_items %}{% endblock %}
+  </ol>
+</nav>
+{% endif %}

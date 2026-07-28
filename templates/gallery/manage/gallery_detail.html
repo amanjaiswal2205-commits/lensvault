@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ gallery.name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li><a href="{% url 'gallery:gallery_manage_list' %}">Client Galleries</a></li>
+<li><span>{{ gallery.name }}</span></li>
+{% endblock %}
+
+{% block content %}
+<div class="lv-page">
+  {% include "components/breadcrumb.html" %}
+  <div class="lv-page-header">
+    <div>
+      <h1 class="lv-page-title">{{ gallery.name }}</h1>
+      <p class="lv-page-subtitle">{{ gallery.event.title }} &middot; {{ gallery.get_access_type_display }}</p>
+    </div>
+  </div>
+
+  <div class="lv-card lv-card-glass">
+    <div class="lv-card-body">
+      <dl class="lv-profile-details">
+        <div class="lv-profile-detail">
+          <dt>Event</dt>
+          <dd>{{ gallery.event.title }}</dd>
+        </div>
+        <div class="lv-profile-detail">
+          <dt>Access Type</dt>
+          <dd>{{ gallery.get_access_type_display }}</dd>
+        </div>
+        <div class="lv-profile-detail">
+          <dt>Status</dt>
+          <dd>{% if gallery.is_active %}Active{% else %}Inactive{% endif %}</dd>
+        </div>
+        <div class="lv-profile-detail">
+          <dt>Expires</dt>
+          <dd>{% if gallery.expires_at %}{{ gallery.expires_at|date:"F d, Y" }}{% else %}No expiry{% endif %}</dd>
+        </div>
+        <div class="lv-profile-detail">
+          <dt>Downloads</dt>
+          <dd>{{ gallery.allow_download|yesno:"Allowed,Disabled" }}</dd>
+        </div>
+        <div class="lv-profile-detail">
+          <dt>Favorites</dt>
+          <dd>{{ gallery.allow_favorites|yesno:"Allowed,Disabled" }}</dd>
+        </div>
+        <div class="lv-profile-detail">
+          <dt>Share Token</dt>
+          <dd><code>{{ gallery.share_token }}</code></dd>
+        </div>
+        <div class="lv-profile-detail">
+          <dt>Public URL</dt>
+          <dd>
+            <div class="flex gap-2">
+              <input type="text" readonly value="{{ public_url }}" class="lv-input lv-input-sm" id="share-url" />
+              <button type="button" class="lv-btn lv-btn-sm lv-btn-secondary" onclick="copyShareUrl()">Copy</button>
+            </div>
+          </dd>
+        </div>
+        <div class="lv-profile-detail">
+          <dt>Created</dt>
+          <dd>{{ gallery.created_at|date:"F j, Y" }}</dd>
+        </div>
+        <div class="lv-profile-detail">
+          <dt>Updated</dt>
+          <dd>{{ gallery.updated_at|date:"F j, Y" }}</dd>
+        </div>
+      </dl>
+
+      <div class="lv-profile-actions mt-6">
+        <a href="{% url 'gallery:gallery_manage_update' gallery.slug %}" class="lv-btn lv-btn-primary">Edit</a>
+        <a href="{% url 'public_gallery' gallery.share_token %}" target="_blank" rel="noopener" class="lv-btn lv-btn-secondary">Open Gallery</a>
+        <a href="{% url 'gallery:gallery_manage_delete' gallery.slug %}" class="lv-btn lv-btn-danger">Delete</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function copyShareUrl() {
+  const input = document.getElementById('share-url');
+  input.select();
+  navigator.clipboard.writeText(input.value).then(function() {
+    const btn = document.querySelector('button[onclick="copyShareUrl()"]');
+    const original = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(function() { btn.textContent = original; }, 1500);
+  });
+}
+</script>
+{% endblock %}

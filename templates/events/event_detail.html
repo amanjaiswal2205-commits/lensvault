@@ -1,0 +1,93 @@
+{% extends "events/base_event.html" %}
+{% load static %}
+
+{% block title %}{{ event.title }} &middot; {{ SITE_NAME }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li><a href="{% url 'events:event_list' %}">Events</a></li>
+<li><span>{{ event.title }}</span></li>
+{% endblock %}
+
+{% block content %}
+<div class="lv-page">
+  {% include "components/breadcrumb.html" %}
+  <div class="lv-event-detail">
+    <div class="lv-event-detail-hero">
+      {% if event.cover_image %}
+        <img src="{{ event.cover_image.url }}" alt="{{ event.title }}" loading="lazy" />
+      {% else %}
+        <div class="lv-event-detail-hero-placeholder">📷</div>
+      {% endif %}
+    </div>
+
+    <div class="lv-event-detail-body">
+      <div class="lv-event-detail-badges">
+        <span class="lv-badge lv-badge-primary">{{ event.get_event_type_display }}</span>
+        <span class="lv-badge lv-badge-{% if event.status == 'published' %}success{% elif event.status == 'draft' %}warning{% else %}secondary{% endif %}">
+          {{ event.get_status_display }}
+        </span>
+        <span class="lv-badge lv-badge-secondary">{{ event.get_visibility_display }}</span>
+        {% if event.is_expired %}
+          <span class="lv-badge lv-badge-danger">Expired</span>
+        {% endif %}
+      </div>
+
+      <h1 class="lv-event-detail-title">{{ event.title }}</h1>
+      <p class="lv-event-detail-subtitle">by {{ event.organizer_name|default:"Unknown organizer" }}</p>
+
+      <p class="lv-event-detail-description">{{ event.description|default:"No description provided." }}</p>
+
+      <div class="lv-event-detail-meta">
+        <div class="lv-event-detail-meta-item">
+          <p class="lv-event-detail-meta-label">Event Date</p>
+          <p class="lv-event-detail-meta-value">{{ event.event_date|date:"F d, Y" }}</p>
+        </div>
+        <div class="lv-event-detail-meta-item">
+          <p class="lv-event-detail-meta-label">Event Time</p>
+          <p class="lv-event-detail-meta-value">{{ event.event_time|time:"H:i"|default:"—" }}</p>
+        </div>
+        <div class="lv-event-detail-meta-item">
+          <p class="lv-event-detail-meta-label">Location</p>
+          <p class="lv-event-detail-meta-value">{{ event.location|default:"—" }}</p>
+        </div>
+        <div class="lv-event-detail-meta-item">
+          <p class="lv-event-detail-meta-label">Organizer Contact</p>
+          <p class="lv-event-detail-meta-value">{{ event.organizer_contact|default:"—" }}</p>
+        </div>
+        <div class="lv-event-detail-meta-item">
+          <p class="lv-event-detail-meta-label">Gallery Expiry</p>
+          <p class="lv-event-detail-meta-value">{{ event.gallery_expiry_date|date:"F d, Y"|default:"Never" }}</p>
+        </div>
+        <div class="lv-event-detail-meta-item">
+          <p class="lv-event-detail-meta-label">Allow Download</p>
+          <p class="lv-event-detail-meta-value">{% if event.allow_download %}Yes{% else %}No{% endif %}</p>
+        </div>
+        <div class="lv-event-detail-meta-item">
+          <p class="lv-event-detail-meta-label">Show Watermark</p>
+          <p class="lv-event-detail-meta-value">{% if event.show_watermark %}Yes{% else %}No{% endif %}</p>
+        </div>
+        <div class="lv-event-detail-meta-item">
+          <p class="lv-event-detail-meta-label">Created By</p>
+          <p class="lv-event-detail-meta-value">{{ event.created_by|default:"—" }}</p>
+        </div>
+        <div class="lv-event-detail-meta-item">
+          <p class="lv-event-detail-meta-label">Created At</p>
+          <p class="lv-event-detail-meta-value">{{ event.created_at|date:"F d, Y H:i" }}</p>
+        </div>
+        <div class="lv-event-detail-meta-item">
+          <p class="lv-event-detail-meta-label">Updated At</p>
+          <p class="lv-event-detail-meta-value">{{ event.updated_at|date:"F d, Y H:i" }}</p>
+        </div>
+      </div>
+
+      <div class="lv-event-detail-actions">
+        <a href="{% url 'events:event_update' event.slug %}" class="lv-btn lv-btn-primary">Edit</a>
+        <a href="{% url 'events:event_delete' event.slug %}" class="lv-btn lv-btn-danger">Delete</a>
+        <a href="{% url 'gallery:event_gallery_detail' event.slug %}" class="lv-btn lv-btn-ghost">View Gallery</a>
+        <a href="{% url 'qr:generate' event.slug %}" class="lv-btn lv-btn-ghost">Generate QR</a>
+        <a href="{% url 'events:event_list' %}" class="lv-btn lv-btn-ghost">&larr; Back to events</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

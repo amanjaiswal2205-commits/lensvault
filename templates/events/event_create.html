@@ -1,0 +1,76 @@
+{% extends "events/base_event.html" %}
+
+{% block title %}Create Event &middot; {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="lv-page">
+  <div class="lv-page-header">
+    <div>
+      <h1 class="lv-page-title">Create Event</h1>
+      <p class="lv-page-subtitle">Fill in the details to publish a new photography event</p>
+    </div>
+  </div>
+
+  <div class="lv-card lv-card-glass">
+    <div class="lv-card-body">
+      <form method="post" action="{% url 'events:event_create' %}" enctype="multipart/form-data" data-loading novalidate>
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+          <div class="lv-alert lv-alert-danger">
+            {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+          </div>
+        {% endif %}
+
+        {% for field in form %}
+          {% if field.name == 'cover_image' %}
+            <div class="lv-form-group">
+              <label for="{{ field.id_for_label }}" class="lv-label">{{ field.label }}</label>
+              {{ field }}
+              <div id="cover-preview" class="lv-form-preview hidden">
+                <img src="" alt="Cover preview" class="lv-form-preview-img" />
+              </div>
+              {% for error in field.errors %}<p class="lv-form-error">{{ error }}</p>{% endfor %}
+            </div>
+          {% elif field.name == 'allow_download' or field.name == 'show_watermark' %}
+            <div class="lv-form-group lv-form-checkbox">
+              {{ field }}
+              <label for="{{ field.id_for_label }}" class="lv-checkbox-label">{{ field.label }}</label>
+              {% for error in field.errors %}<p class="lv-form-error">{{ error }}</p>{% endfor %}
+            </div>
+          {% else %}
+            {% include "events/partials/form_field.html" with field=field %}
+          {% endif %}
+        {% endfor %}
+
+        <div class="lv-profile-actions">
+          <button type="submit" data-loading-btn class="lv-btn lv-btn-primary">
+            <span data-loading-label>Create Event</span>
+          </button>
+          <a href="{% url 'events:event_list' %}" class="lv-btn lv-btn-secondary">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var input = document.getElementById('id_cover_image');
+    var preview = document.getElementById('cover-preview');
+    var img = preview ? preview.querySelector('img') : null;
+    if (input && preview && img) {
+      input.addEventListener('change', function () {
+        var file = input.files && input.files[0];
+        if (file) {
+          img.src = URL.createObjectURL(file);
+          preview.classList.remove('hidden');
+        } else {
+          preview.classList.add('hidden');
+        }
+      });
+    }
+  });
+</script>
+{% endblock %}
+

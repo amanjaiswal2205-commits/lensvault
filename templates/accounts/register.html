@@ -1,0 +1,73 @@
+{% extends "accounts/base_auth.html" %}
+
+{% block title %}Create Account &middot; {{ SITE_NAME }}{% endblock %}
+
+{% block auth_content %}
+<div class="lv-auth-container">
+  <div class="lv-auth-card">
+    <div class="lv-auth-header">
+      <h1 class="lv-auth-title">Create your account</h1>
+      <p class="lv-auth-subtitle">Join {{ SITE_NAME }} in less than a minute</p>
+    </div>
+
+    <div aria-live="polite">
+      {% include "accounts/partials/messages.html" %}
+
+      {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+          {% include "components/alerts.html" with type="danger" message=error %}
+        {% endfor %}
+      {% endif %}
+    </div>
+
+    <form method="post" action="{% url 'accounts:register' %}" data-loading enctype="multipart/form-data" novalidate class="lv-auth-form">
+      {% csrf_token %}
+
+      {% for field in form %}
+        {% if field.name == 'password1' %}
+          <div class="lv-form-group">
+            <label for="{{ field.id_for_label }}" class="lv-label">Password <span class="lv-required">*</span></label>
+            <div class="lv-password-field">
+              {{ field }}
+              <button type="button" data-password-toggle="{{ field.auto_id }}" class="lv-password-toggle" aria-label="Toggle password visibility">
+                <span data-icon>👁</span>
+              </button>
+            </div>
+            <div class="lv-password-strength">
+              <div class="lv-password-strength-bar" id="strength-bar" data-password-strength="{{ field.auto_id }}"></div>
+            </div>
+            <span data-strength-label class="lv-password-strength-label"></span>
+            {% for error in field.errors %}<p class="lv-form-error">{{ error }}</p>{% endfor %}
+          </div>
+        {% elif field.name == 'password2' %}
+          <div class="lv-form-group">
+            <label for="{{ field.id_for_label }}" class="lv-label">Confirm Password <span class="lv-required">*</span></label>
+            <div class="lv-password-field">
+              {{ field }}
+              <button type="button" data-password-toggle="{{ field.auto_id }}" class="lv-password-toggle" aria-label="Toggle password visibility">
+                <span data-icon>👁</span>
+              </button>
+            </div>
+            {% for error in field.errors %}<p class="lv-form-error">{{ error }}</p>{% endfor %}
+          </div>
+        {% else %}
+          <div class="lv-form-group">
+            <label for="{{ field.id_for_label }}" class="lv-label">{{ field.label }}</label>
+            {{ field }}
+            {% for error in field.errors %}<p class="lv-form-error">{{ error }}</p>{% endfor %}
+          </div>
+        {% endif %}
+      {% endfor %}
+
+      <button type="submit" data-loading-btn class="lv-btn lv-btn-primary lv-btn-block">
+        <span data-loading-label>Create Account</span>
+      </button>
+    </form>
+
+    <p class="lv-auth-footer">
+      Already have an account?
+      <a href="{% url 'accounts:login' %}" class="lv-auth-link">Sign in</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% load static %}
+<div class="lv-card">
+  {% block card_header %}
+    {% if card_title or card_actions %}
+    <div class="lv-card-header">
+      <div>
+        {% if card_icon %}<span class="lv-card-icon">{{ card_icon }}</span>{% endif %}
+        <h3 class="lv-card-title">{{ card_title }}</h3>
+        {% if card_subtitle %}<p class="lv-card-subtitle">{{ card_subtitle }}</p>{% endif %}
+      </div>
+      {% if card_actions %}<div class="lv-card-actions">{{ card_actions }}</div>{% endif %}
+    </div>
+    {% endif %}
+  {% endblock %}
+  <div class="lv-card-body">
+    {% block card_body %}{% endblock %}
+  </div>
+  {% block card_footer %}
+    {% if card_footer %}
+    <div class="lv-card-footer">
+      {{ card_footer }}
+    </div>
+    {% endif %}
+  {% endblock %}
+</div>

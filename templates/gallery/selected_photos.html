@@ -1,0 +1,95 @@
+{% extends "gallery/base_gallery.html" %}
+{% load static %}
+
+{% block title %}{{ gallery.name }} &middot; Selected Photos &middot; {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto max-w-6xl px-4 py-10">
+  <header class="mb-8">
+    <div class="flex items-center gap-2 text-sm text-gray-500 mb-2">
+      <a href="{% url 'core:home' %}" class="hover:text-indigo-600">Home</a>
+      <span>/</span>
+      <a href="{% url 'gallery:event_gallery' %}" class="hover:text-indigo-600">Gallery</a>
+      <span>/</span>
+      <a href="{% url 'public_gallery' gallery.share_token %}" class="hover:text-indigo-600">{{ gallery.name }}</a>
+      <span>/</span>
+      <span class="text-gray-900">Selected Photos</span>
+    </div>
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900">{{ gallery.name }}</h1>
+        <p class="text-gray-500 mt-1">Event: {{ event.title }}</p>
+      </div>
+      <a href="{% url 'public_gallery' gallery.share_token %}" class="lv-btn lv-btn-secondary">&larr; Back to Gallery</a>
+    </div>
+  </header>
+
+  <div class="lv-card lv-card-glass mb-8">
+    <div class="lv-card-body">
+      <p class="text-gray-600">
+        You have selected <strong>{{ favorite_count }}</strong> photo{{ favorite_count|pluralize }} from this gallery.
+      </p>
+    </div>
+  </div>
+
+  {% if favorites %}
+    <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4">
+      {% for fav in favorites %}
+        {% with photo=fav.photo %}
+          <div class="gallery-card group relative block bg-white rounded-xl overflow-hidden ring-1 ring-black/5 cursor-pointer" data-media-uuid="{{ photo.uuid }}" role="link" tabindex="0" aria-label="View {{ photo.title }}">
+            {% if photo.thumbnail %}
+              <a href="{% url 'gallery:media_detail' photo.uuid %}" class="block">
+                <img src="{{ photo.thumbnail.url }}" alt="{{ photo.title }}" loading="lazy" class="aspect-square w-full object-cover group-hover:scale-105 transition duration-300">
+              </a>
+            {% elif photo.is_image and photo.file %}
+              <a href="{% url 'gallery:media_detail' photo.uuid %}" class="block">
+                <img src="{{ photo.file.url }}" alt="{{ photo.title }}" loading="lazy" class="aspect-square w-full object-cover group-hover:scale-105 transition duration-300">
+              </a>
+            {% elif photo.is_video %}
+              <a href="{% url 'gallery:media_detail' photo.uuid %}" class="block">
+                {% if photo.thumbnail %}
+                  <img src="{{ photo.thumbnail.url }}" alt="{{ photo.title }}" loading="lazy" class="aspect-square w-full object-cover">
+                {% else %}
+                  <div class="aspect-square w-full grid place-items-center text-5xl text-gray-400">🎬</div>
+                {% endif %}
+              </a>
+              <span class="absolute bottom-2 right-2 rounded bg-black/60 px-1.5 py-0.5 text-xs text-white">▶</span>
+            {% else %}
+              <a href="{% url 'gallery:media_detail' photo.uuid %}" class="block">
+                <div class="aspect-square w-full grid place-items-center text-5xl text-gray-400">🖼️</div>
+              </a>
+            {% endif %}
+            <span class="absolute top-2 left-2 rounded-full px-2 py-0.5 text-[11px] font-medium capitalize bg-blue-500/90 text-white">
+              {{ photo.get_media_type_display }}
+            </span>
+            {% if gallery.allow_download %}
+              <a href="{% url 'download_photo' gallery.share_token photo.pk %}"
+                 class="absolute bottom-2 left-2 rounded bg-black/60 px-1.5 py-0.5 text-xs text-white hover:bg-black/80 transition"
+                 aria-label="Download photo">
+                ↓
+              </a>
+            {% endif %}
+            <div class="p-3">
+              <p class="text-sm font-medium text-gray-900 truncate">{{ photo.title }}</p>
+              {% if photo.album %}
+                <p class="text-xs text-gray-500 mt-1">{{ photo.album.title }}</p>
+              {% endif %}
+            </div>
+          </div>
+        {% endwith %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="lv-card lv-card-glass">
+      <div class="lv-card-body">
+        <div class="lv-empty">
+          <div class="lv-empty-icon">❤️</div>
+          <h3 class="lv-empty-title">No favorite photos yet</h3>
+          <p class="lv-empty-description">Photos you favorite from this gallery will appear here.</p>
+          <a href="{% url 'public_gallery' gallery.share_token %}" class="lv-btn lv-btn-primary">Back to Gallery</a>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% load static %}
+<div class="lv-table-container">
+  <table class="lv-table">
+    <thead>
+      <tr>
+        {% block table_head %}{% endblock %}
+      </tr>
+    </thead>
+    <tbody>
+      {% block table_body %}{% endblock %}
+    </tbody>
+  </table>
+</div>

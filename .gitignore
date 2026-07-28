@@ -1,0 +1,27 @@
+__pycache__/
+*.py[cod]
+*.sqlite3
+*.log
+.env
+
+# Static / media output (collected)
+/static/staticfiles/
+/static/css/output.css
+/media/
+
+# Tailwind
+/node_modules/
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store
+# Python virtual environment
+.venv/
+
+# Python cache
+*.pyc
+
+# Local test/debug files
+debug_response.txt
+tmp_qr.sqlite3

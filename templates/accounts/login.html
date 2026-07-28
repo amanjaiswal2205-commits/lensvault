@@ -1,0 +1,61 @@
+{% extends "accounts/base_auth.html" %}
+
+{% block title %}Sign In &middot; {{ SITE_NAME }}{% endblock %}
+
+{% block auth_content %}
+<div class="lv-auth-container">
+  <div class="lv-auth-card">
+    <div class="lv-auth-header">
+      <h1 class="lv-auth-title">Welcome back</h1>
+      <p class="lv-auth-subtitle">Sign in to your {{ SITE_NAME }} account</p>
+    </div>
+
+    <div aria-live="polite">
+      {% include "accounts/partials/messages.html" %}
+
+      {% if form.errors %}
+        {% include "components/alerts.html" with type="danger" message="Invalid email or password. Please try again." %}
+      {% endif %}
+    </div>
+
+    <form method="post" action="{% url 'accounts:login' %}" data-loading novalidate class="lv-auth-form">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ next }}">
+
+      <div class="lv-form-group">
+        <label for="id_username" class="lv-label">Email</label>
+        <input type="email" name="username" id="id_username" required autofocus autocomplete="email"
+               class="lv-input" placeholder="you@example.com" value="{{ form.username.value|default:'' }}" />
+      </div>
+
+      <div class="lv-form-group">
+        <label for="id_password" class="lv-label">Password</label>
+        <div class="lv-password-field">
+          <input type="password" name="password" id="id_password" required autocomplete="current-password"
+                 class="lv-input" placeholder="••••••••" />
+          <button type="button" data-password-toggle="id_password" class="lv-password-toggle" aria-label="Toggle password visibility">
+            <span data-icon>👁</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="lv-auth-options">
+        <label class="lv-checkbox">
+          <input type="checkbox" name="remember" class="lv-checkbox-input" />
+          <span class="lv-checkbox-label">Remember me</span>
+        </label>
+        <a href="{% url 'accounts:password_reset' %}" class="lv-auth-link">Forgot password?</a>
+      </div>
+
+      <button type="submit" data-loading-btn class="lv-btn lv-btn-primary lv-btn-block">
+        <span data-loading-label>Sign In</span>
+      </button>
+    </form>
+
+    <p class="lv-auth-footer">
+      Don't have an account?
+      <a href="{% url 'accounts:register' %}" class="lv-auth-link">Create one</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

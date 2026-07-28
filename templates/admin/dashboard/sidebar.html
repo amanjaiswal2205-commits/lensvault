@@ -1,0 +1,100 @@
+<aside class="sidebar">
+    <div class="sidebar-logo">
+        <a href="{% url 'admin:index' %}" class="sidebar-logo-link">
+            <div class="sidebar-logo-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                    <circle cx="12" cy="13" r="4"/>
+                </svg>
+            </div>
+            <div>
+                <div class="sidebar-logo-title">LensVault</div>
+                <div class="sidebar-logo-subtitle">Studio Management</div>
+            </div>
+        </a>
+    </div>
+
+    <div class="sidebar-nav">
+        <div class="nav-section">
+            <div class="nav-group">
+                <div class="nav-group-title">MAIN</div>
+                <nav class="nav-items">
+                    <div class="nav-item"><a href="{% url 'admin:index' %}"><span class="nav-icon material-symbols-outlined">dashboard</span><span class="nav-label">Dashboard</span></a></div>
+                    <div class="nav-item"><a href="#"><span class="nav-icon material-symbols-outlined">home</span><span class="nav-label">Home</span></a></div>
+                </nav>
+            </div>
+
+            <div class="nav-group">
+                <div class="nav-group-title">PHOTOGRAPHY</div>
+                <nav class="nav-items">
+                    <div class="nav-item"><a href="#"><span class="nav-icon material-symbols-outlined">perm_media</span><span class="nav-label">Gallery</span></a></div>
+                    <div class="nav-item"><a href="#"><span class="nav-icon material-symbols-outlined">photo_library</span><span class="nav-label">Albums</span></a></div>
+                    <div class="nav-item"><a href="#"><span class="nav-icon material-symbols-outlined">image</span><span class="nav-label">Photos</span></a></div>
+                    <div class="nav-item"><a href="#"><span class="nav-icon material-symbols-outlined">cloud_upload</span><span class="nav-label">Upload</span></a></div>
+                </nav>
+            </div>
+
+            <div class="nav-group">
+                <div class="nav-group-title">CMS</div>
+                <nav class="nav-items">
+                    <div class="nav-item"><a href="#"><span class="nav-icon material-symbols-outlined">description</span><span class="nav-label">Pages</span></a></div>
+                    <div class="nav-item"><a href="#"><span class="nav-icon material-symbols-outlined">article</span><span class="nav-label">Posts</span></a></div>
+                    <div class="nav-item"><a href="#"><span class="nav-icon material-symbols-outlined">perm_media</span><span class="nav-label">Media</span></a></div>
+                    <div class="nav-item"><a href="#"><span class="nav-icon material-symbols-outlined">folder</span><span class="nav-label">Categories</span></a></div>
+                </nav>
+            </div>
+
+            <div class="nav-group">
+                <div class="nav-group-title">ANALYTICS</div>
+                <nav class="nav-items">
+                    <div class="nav-item"><a href="#"><span class="nav-icon material-symbols-outlined">assessment</span><span class="nav-label">Reports</span></a></div>
+                    <div class="nav-item"><a href="#"><span class="nav-icon material-symbols-outlined">insights</span><span class="nav-label">Statistics</span></a></div>
+                    <div class="nav-item"><a href="#"><span class="nav-icon material-symbols-outlined">show_chart</span><span class="nav-label">Traffic</span></a></div>
+                </nav>
+            </div>
+
+            <div class="nav-group">
+                <div class="nav-group-title">ACCOUNTS</div>
+                <nav class="nav-items">
+                    <div class="nav-item"><a href="#"><span class="nav-icon material-symbols-outlined">person</span><span class="nav-label">Users</span></a></div>
+                    <div class="nav-item"><a href="#"><span class="nav-icon material-symbols-outlined">badge</span><span class="nav-label">Roles</span></a></div>
+                    <div class="nav-item"><a href="#"><span class="nav-icon material-symbols-outlined">admin_panel_settings</span><span class="nav-label">Permissions</span></a></div>
+                </nav>
+            </div>
+
+            <div class="nav-group">
+                <div class="nav-group-title">SYSTEM</div>
+                <nav class="nav-items">
+                    <div class="nav-item"><a href="#"><span class="nav-icon material-symbols-outlined">settings</span><span class="nav-label">Settings</span></a></div>
+                    <div class="nav-item"><a href="#"><span class="nav-icon material-symbols-outlined">receipt_long</span><span class="nav-label">Logs</span></a></div>
+                    <div class="nav-item"><a href="#"><span class="nav-icon material-symbols-outlined">cloud_sync</span><span class="nav-label">Backup</span></a></div>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebar-footer">
+        <div class="nav-section">
+            <div class="nav-group">
+                <div class="nav-group-title">ACCOUNT</div>
+                <nav class="nav-items">
+                    <div class="nav-item">
+                        <a href="{% url 'admin:cms_sitesettings_changelist' %}">
+                            <span class="nav-icon material-symbols-outlined">settings</span>
+                            <span class="nav-label">Settings</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <form method="post" action="{% url 'admin:logout' %}" class="sidebar-logout-form">
+                            {% csrf_token %}
+                            <button type="submit" class="nav-link-button">
+                                <span class="nav-icon material-symbols-outlined">logout</span>
+                                <span class="nav-label">Logout</span>
+                            </button>
+                        </form>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+</aside>

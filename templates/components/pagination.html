@@ -1,0 +1,15 @@
+{% load static %}
+{# Reusable pagination #}
+{% if is_paginated %}
+<div class="lv-pagination">
+  {% if page_obj.has_previous %}
+    <a href="?{% for key, val in request.GET.items %}{% if key != 'page' %}{{ key }}={{ val }}&{% endif %}{% endfor %}page={{ page_obj.previous_page_number }}"
+       class="lv-btn lv-btn-secondary">← Previous</a>
+  {% endif %}
+  <span class="lv-pagination-info">Page {{ page_obj.number }} of {{ paginator.num_pages }}</span>
+  {% if page_obj.has_next %}
+    <a href="?{% for key, val in request.GET.items %}{% if key != 'page' %}{{ key }}={{ val }}&{% endif %}{% endfor %}page={{ page_obj.next_page_number }}"
+       class="lv-btn lv-btn-secondary">Next →</a>
+  {% endif %}
+</div>
+{% endif %}

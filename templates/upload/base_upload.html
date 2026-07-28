@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_css %}
+<link rel="stylesheet" href="{% static 'css/pages/upload.css' %}" />
+{% endblock %}
+
+{% block page_js %}
+<script src="{% static 'uploads/js/upload_manager.js' %}" defer></script>
+{% endblock %}

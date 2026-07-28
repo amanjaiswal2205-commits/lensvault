@@ -1,0 +1,13 @@
+{
+  "name": "lensvault",
+  "version": "0.1.0",
+  "private": true,
+  "description": "LensVault Django project assets",
+  "scripts": {
+    "build": "django-tailwind-cli",
+    "watch": "django-tailwind-cli --watch"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.0"
+  }
+}

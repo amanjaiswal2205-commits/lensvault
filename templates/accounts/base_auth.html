@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block body %}
+  <div class="lv-auth-gradient min-h-screen flex items-center justify-center px-4 py-10">
+    <div class="w-full max-w-md">
+      {% block auth_content %}{% endblock %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block page_js %}
+<script src="{% static 'js/auth.js' %}" defer></script>
+{% endblock %}

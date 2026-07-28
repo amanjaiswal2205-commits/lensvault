@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Albums{% endblock %}
+
+{% block content %}
+<div class="lv-page">
+  <div class="lv-page-header">
+    <div>
+      <h1 class="lv-page-title">Albums</h1>
+      <p class="lv-page-subtitle">Organize your photo collections</p>
+    </div>
+    <a href="{% url 'albums:album_create' %}" class="lv-btn lv-btn-primary">
+      <svg class="lv-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+      </svg>
+      Create Album
+    </a>
+  </div>
+
+  <div class="lv-card lv-card-glass lv-filters-card">
+    <div class="lv-card-body">
+      <form method="get" class="lv-filters-form">
+        <div class="lv-filters-grid">
+          <div class="lv-form-group lv-flex-grow-2">
+            <input type="text" name="search" value="{{ search }}" placeholder="Search albums..." class="lv-input" />
+          </div>
+          <div class="lv-form-group">
+            <select name="event" class="lv-input">
+              <option value="">All Events</option>
+              {% for ev in events %}
+                <option value="{{ ev.slug }}" {% if event_filter == ev.slug %}selected{% endif %}>{{ ev.title }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="lv-form-group">
+            <select name="status" class="lv-input">
+              <option value="">All Status</option>
+              {% for value, label in status_choices %}
+                <option value="{{ value }}" {% if status_filter == value %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <button type="submit" class="lv-btn lv-btn-primary">Apply</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  {% if albums %}
+  <div class="lv-albums-grid">
+    {% for album in albums %}
+    <a href="{{ album.get_absolute_url }}" class="lv-card lv-album-card">
+      <div class="lv-album-cover">
+        {% if album.cover_image %}
+          <img src="{{ album.cover_image.url }}" alt="{{ album.title }}" loading="lazy" />
+        {% else %}
+          <div class="lv-album-cover-placeholder">🖼️</div>
+        {% endif %}
+        <div class="lv-album-overlay">
+          <span class="lv-badge lv-badge-primary">{{ album.media_count }} media</span>
+        </div>
+      </div>
+      <div class="lv-card-body">
+        <h3 class="lv-album-title">{{ album.title }}</h3>
+        <p class="lv-album-event">{{ album.event.title }}</p>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+
+  {% if is_paginated %}
+  <div class="lv-pagination">
+    {% if page_obj.has_previous %}
+      <a href="?{% if search %}search={{ search }}&{% endif %}{% if event_filter %}event={{ event_filter }}&{% endif %}{% if status_filter %}status={{ status_filter }}&{% endif %}sort={{ sort }}&page={{ page_obj.previous_page_number }}"
+         class="lv-btn lv-btn-secondary">← Previous</a>
+    {% endif %}
+    <span class="lv-pagination-info">Page {{ page_obj.number }} of {{ paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+      <a href="?{% if search %}search={{ search }}&{% endif %}{% if event_filter %}event={{ event_filter }}&{% endif %}{% if status_filter %}status={{ status_filter }}&{% endif %}sort={{ sort }}&page={{ page_obj.next_page_number }}"
+         class="lv-btn lv-btn-secondary">Next →</a>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% else %}
+  <div class="lv-card lv-card-glass">
+    <div class="lv-card-body">
+      {% include "components/empty_states.html" with icon="🖼️" title="No albums found" description="Create your first album to get started." cta_text="Create Album" cta_url=album_create_url %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

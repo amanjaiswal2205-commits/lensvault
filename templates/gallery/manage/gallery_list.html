@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Client Galleries{% endblock %}
+
+{% block content %}
+<div class="lv-page">
+  {% include "components/breadcrumb.html" %}
+  <div class="lv-page-header">
+    <div>
+      <h1 class="lv-page-title">Client Galleries</h1>
+      <p class="lv-page-subtitle">Manage shareable client galleries</p>
+    </div>
+    <a href="{% url 'gallery:gallery_manage_create' %}" class="lv-btn lv-btn-primary">
+      <svg class="lv-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+      </svg>
+      Create Gallery
+    </a>
+  </div>
+
+  <div class="lv-card lv-card-glass">
+    <div class="lv-card-body">
+      {% if galleries %}
+      <div class="lv-events-grid">
+        {% for gallery in galleries %}
+        <div class="lv-card lv-event-card">
+          <div class="lv-event-body">
+            <h3 class="lv-event-title">{{ gallery.name }}</h3>
+            <p class="lv-event-meta">
+              <span>📅 {{ gallery.event.title }}</span>
+              <span>🔒 {{ gallery.get_access_type_display }}</span>
+            </p>
+            <p class="lv-event-meta">
+              <span>{% if gallery.is_active %}Active{% else %}Inactive{% endif %}</span>
+              <span>{% if gallery.expires_at %}Expires: {{ gallery.expires_at|date:"M d, Y" }}{% else %}No expiry{% endif %}</span>
+            </p>
+            <p class="lv-event-meta">
+              <span>⬇ {{ gallery.allow_download|yesno:"Allowed,Disabled" }}</span>
+              <span>⭐ {{ gallery.allow_favorites|yesno:"Allowed,Disabled" }}</span>
+            </p>
+            <p class="lv-event-meta">
+              <span>Created: {{ gallery.created_at|date:"M d, Y" }}</span>
+            </p>
+            <div class="lv-event-footer">
+              <a href="{{ gallery.get_absolute_url }}" class="lv-btn lv-btn-primary lv-btn-sm lv-btn-block">View Details</a>
+              <a href="{% url 'public_gallery' gallery.share_token %}" target="_blank" rel="noopener" class="lv-btn lv-btn-secondary lv-btn-sm lv-btn-block">Open Gallery</a>
+              <a href="{% url 'gallery:gallery_manage_update' gallery.slug %}" class="lv-btn lv-btn-ghost lv-btn-sm lv-btn-block">Edit</a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      {% include "components/pagination.html" %}
+
+      {% else %}
+      <div class="lv-card lv-card-glass">
+        <div class="lv-card-body">
+          {% include "components/empty_states.html" with icon="🖼️" title="No galleries found" description="Create your first client gallery to get started." cta_text="Create Gallery" cta_url=create_url %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "albums/base_album.html" %}
+
+{% block title %}Delete Album &middot; {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto max-w-lg px-4 py-12">
+  <div class="bg-white rounded-2xl shadow-sm ring-1 ring-black/5 p-8 text-center">
+    <div class="mx-auto mb-4 grid h-14 w-14 place-items-center rounded-full bg-red-100 text-3xl">🗑️</div>
+    <h1 class="text-xl font-bold text-gray-900">Delete Album</h1>
+    <p class="text-sm text-gray-500 mt-2">
+      Are you sure you want to delete <span class="font-semibold text-gray-800">{{ album.title }}</span>?
+      This action cannot be undone.
+    </p>
+
+    <form method="post" action="{% url 'albums:album_delete' album.slug %}" data-loading class="mt-6 flex items-center justify-center gap-3">
+      {% csrf_token %}
+      <a href="{{ album.get_absolute_url }}" class="rounded-lg border border-gray-300 px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition">Cancel</a>
+      <button type="submit" data-loading-btn
+              class="inline-flex justify-center items-center gap-2 rounded-lg bg-red-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-red-700 focus:ring-2 focus:ring-red-300 transition">
+        <span data-loading-label>Yes, Delete</span>
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}

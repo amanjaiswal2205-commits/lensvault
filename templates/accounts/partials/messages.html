@@ -1,0 +1,17 @@
+{% comment %}Displays Django messages with color-coded alert styling.{% endcomment %}
+{% if messages %}
+  <div class="space-y-3 mb-6" x-data>
+    {% for message in messages %}
+      <div class="flex items-start gap-3 rounded-lg border px-4 py-3 text-sm transition
+        {% if message.tags == 'error' %} border-red-200 bg-red-50 text-red-700
+        {% elif message.tags == 'success' %} border-green-200 bg-green-50 text-green-700
+        {% elif message.tags == 'warning' %} border-yellow-200 bg-yellow-50 text-yellow-700
+        {% else %} border-blue-200 bg-blue-50 text-blue-700 {% endif %}"
+        role="alert">
+        <span class="flex-1">{{ message }}</span>
+        <button type="button" class="text-current opacity-60 hover:opacity-100"
+                onclick="this.parentElement.remove()" aria-label="Dismiss">&times;</button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}

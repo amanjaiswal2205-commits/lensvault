@@ -1,0 +1,121 @@
+{% extends "gallery/base_gallery.html" %}
+{% load static %}
+
+{% block title %}{{ gallery.name }} &middot; {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="lv-container lv-section">
+  <header class="lv-page-header">
+    <div>
+      <nav class="lv-breadcrumb" aria-label="Breadcrumb">
+        <ol class="lv-breadcrumb-list">
+          <li><a href="{% url 'core:home' %}" class="lv-breadcrumb-link">Home</a></li>
+          <li><a href="{% url 'gallery:event_gallery' %}" class="lv-breadcrumb-link">Gallery</a></li>
+          <li><span>{{ gallery.name }}</span></li>
+        </ol>
+      </nav>
+      <h1 class="lv-page-title">{{ gallery.name }}</h1>
+      <p class="lv-page-subtitle">Event: {{ event.title }}</p>
+    </div>
+    <div class="lv-topbar-actions">
+      <a href="{% url 'gallery:gallery_selected_photos' gallery.share_token %}" class="lv-btn lv-btn-ghost lv-btn-sm">
+        ❤️ Selected Photos
+      </a>
+    </div>
+  </header>
+
+  {% if password_required %}
+    <div class="lv-alert lv-alert-warning mb-6" role="alert">
+      <span class="lv-alert-icon">🔒</span>
+      <div class="lv-alert-content">
+        <p class="lv-alert-message">This gallery requires a password.</p>
+      </div>
+    </div>
+  {% endif %}
+
+  {% if albums %}
+    <h2 class="lv-section-title lv-text-left lv-mb-2" style="font-size: var(--lv-text-xl);">Albums</h2>
+    <div class="lv-albums-grid">
+      {% for album in albums %}
+        <a href="{% url 'gallery:album_gallery' album.slug %}" class="lv-album-card lv-card">
+          <div class="lv-album-cover">
+            {% if album.cover_image %}
+              <img src="{{ album.cover_image.url }}" alt="{{ album.title }}" loading="lazy" />
+            {% else %}
+              <div class="lv-album-cover-placeholder">🖼️</div>
+            {% endif %}
+          </div>
+          <div class="lv-card-body">
+            <h3 class="lv-album-title">{{ album.title }}</h3>
+            <p class="lv-album-event">📁 {{ album.media_count }} photos</p>
+          </div>
+        </a>
+      {% empty %}
+        <div class="col-span-full text-center py-16 text-gray-500">
+          <div class="text-5xl mb-4">📭</div>
+          <p class="text-lg">No albums in this gallery yet.</p>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% if photos %}
+    <h2 class="lv-section-title lv-text-left lv-mb-2 lv-mt-3" style="font-size: var(--lv-text-xl);">Photos</h2>
+    <div id="photo-grid" data-share-token="{{ gallery.share_token }}" class="lv-media-grid">
+      {% for item in photos %}
+        <div class="lv-media-card lv-card cursor-pointer" data-media-uuid="{{ item.uuid }}" role="link" tabindex="0" aria-label="View {{ item.title }}">
+          {% if item.thumbnail %}
+            <div class="lv-media-thumb">
+              <a href="{% url 'gallery:media_detail' item.uuid %}" class="block">
+                <img src="{{ item.thumbnail.url }}" alt="{{ item.title }}" loading="lazy" />
+              </a>
+              <span class="lv-badge lv-badge-{% if item.media_type == 'video' %}secondary{% else %}primary{% endif %} lv-media-badge">
+                {{ item.get_media_type_display }}
+              </span>
+          {% elif item.is_image and item.file %}
+            <div class="lv-media-thumb">
+              <a href="{% url 'gallery:media_detail' item.uuid %}" class="block">
+                <img src="{{ item.file.url }}" alt="{{ item.title }}" loading="lazy" />
+              </a>
+              <span class="lv-badge lv-badge-{% if item.media_type == 'video' %}secondary{% else %}primary{% endif %} lv-media-badge">
+                {{ item.get_media_type_display }}
+              </span>
+          {% elif item.is_video %}
+            <div class="lv-media-thumb">
+              <a href="{% url 'gallery:media_detail' item.uuid %}" class="block">
+                {% if item.thumbnail %}
+                  <img src="{{ item.thumbnail.url }}" alt="{{ item.title }}" loading="lazy" />
+                {% else %}
+                  <div class="aspect-square w-full grid place-items-center text-5xl text-gray-400">🎬</div>
+                {% endif %}
+              </a>
+              <span class="absolute bottom-2 right-2 rounded bg-black/60 px-1.5 py-0.5 text-xs text-white">▶</span>
+          {% else %}
+            <div class="lv-media-thumb">
+              <a href="{% url 'gallery:media_detail' item.uuid %}" class="block">
+                <div class="lv-media-placeholder">🖼️</div>
+              </a>
+          {% endif %}
+              <button type="button" class="favorite-btn absolute top-2 right-2 rounded-full bg-white/90 p-1.5 text-lg shadow-sm hover:scale-110 transition"
+                      data-photo-uuid="{{ item.uuid }}" aria-label="Toggle favorite">
+                <span class="favorite-icon">♡</span>
+              </button>
+              {% if gallery.allow_download %}
+                <a href="{% url 'download_photo' gallery.share_token item.pk %}"
+                   class="absolute bottom-2 left-2 rounded bg-black/60 px-1.5 py-0.5 text-xs text-white hover:bg-black/80 transition"
+                   aria-label="Download photo">
+                  ↓
+                </a>
+              {% endif %}
+            </div>
+          <div class="lv-card-body">
+            <p class="lv-media-title">{{ item.title }}</p>
+          </div>
+        </div>
+      {% empty %}
+        <div class="col-span-full text-center py-12 text-gray-500">No photos in this gallery yet.</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
