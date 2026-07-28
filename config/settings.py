@@ -9,6 +9,7 @@ from pathlib import Path
 
 import os
 
+import dj_database_url
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -109,14 +110,10 @@ if env_bool("USE_SQLITE", False):
     }
 else:
     DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.getenv("DB_NAME", "lensvault"),
-            "USER": os.getenv("DB_USER", "lensvault"),
-            "PASSWORD": os.getenv("DB_PASSWORD", ""),
-            "HOST": os.getenv("DB_HOST", "localhost"),
-            "PORT": os.getenv("DB_PORT", "5432"),
-        }
+        "default": dj_database_url.config(
+            conn_max_age=600,
+            ssl_require=True,
+        )
     }
 
 # Authentication
