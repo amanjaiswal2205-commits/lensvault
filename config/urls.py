@@ -76,3 +76,22 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+import os
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+if os.environ.get("RENDER") == "true":
+    try:
+        if not User.objects.filter(is_superuser=True).exists():
+            User.objects.create_superuser(
+                email="admin@gmail.com",
+                username="admin22",
+                password="Admin@12345",
+            )
+            print("Production superuser created.")
+        else:
+            print("Production superuser already exists.")
+    except Exception:
+        pass
