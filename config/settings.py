@@ -60,6 +60,8 @@ INSTALLED_APPS = [
     "apps.analytics",
     "apps.core",
     "apps.cms",
+    "cloudinary",
+    "cloudinary_storage",
 ]
 
 MIDDLEWARE = [
@@ -177,6 +179,10 @@ STORAGES = {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
+
+# Cloudinary media storage (production only)
+if os.getenv("CLOUDINARY_URL"):
+    STORAGES["default"]["BACKEND"] = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
