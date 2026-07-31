@@ -1,3 +1,5 @@
+import os
+
 from django.http import FileResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
@@ -7,6 +9,38 @@ from apps.accounts.models import User
 from apps.events.models import Client
 from apps.gallery.models import ClientGallery, GalleryDownloadLog, GalleryVisit
 from apps.media.models import Media
+
+
+_MIME_EXT_MAP = {
+    "image/jpeg": ".jpg",
+    "image/png": ".png",
+    "image/webp": ".webp",
+    "video/mp4": ".mp4",
+    "video/quicktime": ".mov",
+    "video/x-msvideo": ".avi",
+    "video/x-matroska": ".mkv",
+}
+
+
+def _download_filename(media):
+    """Build a user-friendly filename with the correct extension.
+
+    Cloudinary (and some other backends) strip the original extension from
+    the stored name, so we reconstruct it from ``mime_type`` or
+    ``media_type`` when the base name is extension-less.
+    """
+    base = os.path.basename(media.file.name)
+
+    if "." in base:
+        return base
+
+    if media.mime_type and media.mime_type in _MIME_EXT_MAP:
+        return base + _MIME_EXT_MAP[media.mime_type]
+
+    if media.media_type == "video":
+        return base + ".mp4"
+
+    return base + ".jpg"
 
 
 def get_client_ip(request):
@@ -123,5 +157,5 @@ class GalleryAccessService:
         return FileResponse(
             photo.file.open("rb"),
             as_attachment=True,
-            filename=photo.file.name.split("/")[-1],
+            filename=_download_filename(photo),
         )

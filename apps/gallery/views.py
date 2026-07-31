@@ -8,6 +8,8 @@ from django.utils import timezone
 from django.views import View
 from django.views.generic import ListView
 
+import os
+
 from apps.albums.models import Album, AlbumStatus
 from apps.events.models import (
     Event,
@@ -62,6 +64,42 @@ def _visible_media(album):
     return Media.objects.filter(album=album, status=MediaStatus.ACTIVE).order_by(
         "created_at"
     )
+
+
+# ---------------------------------------------------------------------------
+# Filename helpers
+# ---------------------------------------------------------------------------
+
+_MIME_EXT_MAP = {
+    "image/jpeg": ".jpg",
+    "image/png": ".png",
+    "image/webp": ".webp",
+    "video/mp4": ".mp4",
+    "video/quicktime": ".mov",
+    "video/x-msvideo": ".avi",
+    "video/x-matroska": ".mkv",
+}
+
+
+def _download_filename(media):
+    """Build a user-friendly filename with the correct extension.
+
+    Cloudinary (and some other backends) strip the original extension from
+    the stored name, so we reconstruct it from ``mime_type`` or
+    ``media_type`` when the base name is extension-less.
+    """
+    base = os.path.basename(media.file.name)
+
+    if "." in base:
+        return base
+
+    if media.mime_type and media.mime_type in _MIME_EXT_MAP:
+        return base + _MIME_EXT_MAP[media.mime_type]
+
+    if media.media_type == "video":
+        return base + ".mp4"
+
+    return base + ".jpg"
 
 
 # ---------------------------------------------------------------------------
@@ -255,7 +293,7 @@ def media_download(request, uuid):
     if not event.allow_download:
         return HttpResponse("Downloads are disabled for this event.", status=403)
 
-    filename = media.file.name.split("/")[-1]
+    filename = _download_filename(media)
     response = FileResponse(
         media.file.open("rb"),
         as_attachment=True,
