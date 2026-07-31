@@ -165,22 +165,49 @@ class RuntimeSmokeTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
     # GALLERY
-    def test_gallery_event_list(self):
+    def test_gallery_event_list_anonymous_redirect(self):
+        response = self.client.get(reverse("gallery:event_gallery"))
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith(reverse("accounts:login")))
+
+    def test_gallery_event_list_authenticated(self):
+        self.client.force_login(self.user)
         response = self.client.get(reverse("gallery:event_gallery"))
         self.assertEqual(response.status_code, 200)
 
-    def test_gallery_event_detail(self):
+    def test_gallery_event_detail_anonymous_redirect(self):
+        response = self.client.get(reverse("gallery:event_gallery_detail", kwargs={"event_slug": self.event.slug}))
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith(reverse("accounts:login")))
+
+    def test_gallery_event_detail_authenticated(self):
+        self.client.force_login(self.user)
         response = self.client.get(reverse("gallery:event_gallery_detail", kwargs={"event_slug": self.event.slug}))
         self.assertEqual(response.status_code, 200)
 
-    def test_gallery_album_detail(self):
+    def test_gallery_album_detail_anonymous_redirect(self):
+        response = self.client.get(reverse("gallery:album_gallery", kwargs={"album_slug": self.album.slug}))
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith(reverse("accounts:login")))
+
+    def test_gallery_album_detail_authenticated(self):
+        self.client.force_login(self.user)
         response = self.client.get(reverse("gallery:album_gallery", kwargs={"album_slug": self.album.slug}))
         self.assertEqual(response.status_code, 200)
 
     def test_public_client_gallery(self):
         response = self.client.get(reverse("public_gallery", kwargs={"share_token": self.gallery.share_token}))
         self.assertEqual(response.status_code, 200)
-    def test_gallery_password_page(self):
+    def test_gallery_password_page_anonymous_redirect(self):
+        self.event.visibility = EventVisibility.PASSWORD_PROTECTED
+        self.event.password = "testpass"
+        self.event.save()
+        response = self.client.get(reverse("gallery:event_password", kwargs={"event_slug": self.event.slug}))
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith(reverse("accounts:login")))
+
+    def test_gallery_password_page_authenticated(self):
+        self.client.force_login(self.user)
         self.event.visibility = EventVisibility.PASSWORD_PROTECTED
         self.event.password = "testpass"
         self.event.save()
@@ -196,7 +223,15 @@ class RuntimeSmokeTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
     # QR
-    def test_qr_flow(self):
+    def test_qr_flow_anonymous_redirect_to_login(self):
+        from apps.qr.models import QRCode
+        qr = QRCode.objects.create(event=self.event, is_active=True)
+        response = self.client.get(reverse("access_qr", kwargs={"token": qr.token}))
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith(reverse("accounts:login")))
+
+    def test_qr_flow_authenticated_redirects_to_gallery(self):
+        self.client.force_login(self.user)
         from apps.qr.models import QRCode
         qr = QRCode.objects.create(event=self.event, is_active=True)
         response = self.client.get(reverse("access_qr", kwargs={"token": qr.token}))
@@ -223,7 +258,16 @@ class RuntimeSmokeTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
     # PASSWORD PROTECTED GALLERY
-    def test_password_protected_event_gallery(self):
+    def test_password_protected_event_gallery_anonymous_redirect(self):
+        self.event.visibility = EventVisibility.PASSWORD_PROTECTED
+        self.event.password = "testpass"
+        self.event.save()
+        response = self.client.get(reverse("gallery:event_gallery_detail", kwargs={"event_slug": self.event.slug}))
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url.startswith(reverse("accounts:login")))
+
+    def test_password_protected_event_gallery_authenticated_redirects_to_password(self):
+        self.client.force_login(self.user)
         self.event.visibility = EventVisibility.PASSWORD_PROTECTED
         self.event.password = "testpass"
         self.event.save()

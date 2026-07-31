@@ -11,7 +11,7 @@ from django.conf.urls.static import static
 from django.contrib.auth.decorators import login_not_required
 from django.contrib import admin
 from django.http import Http404
-from django.urls import include, path
+from django.urls import include, path, reverse
 from django.shortcuts import redirect
 from django.utils import timezone
 
@@ -22,7 +22,17 @@ from apps.qr.models import QRCode
 
 @login_not_required
 def access_qr(request, token):
-    """Resolve a scanned QR code and route the visitor to the event gallery."""
+    """Resolve a scanned QR code and route the visitor to the event gallery.
+
+    Anonymous users are redirected to the login page. Authenticated users
+    are redirected to the gallery URL (which itself enforces further
+    visibility / password checks).
+    """
+    if not request.user.is_authenticated:
+        return redirect(
+            f"{reverse('accounts:login')}?next={request.path}"
+        )
+
     qr = QRCode.objects.filter(token=token).select_related("event").first()
 
     if qr is None or not qr.is_active:

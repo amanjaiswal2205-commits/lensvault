@@ -1,4 +1,5 @@
-from django.contrib.auth.decorators import login_not_required
+from django.contrib.auth.decorators import login_not_required, login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count
 from django.http import FileResponse, Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -68,8 +69,11 @@ def _visible_media(album):
 # ---------------------------------------------------------------------------
 
 
-class EventGalleryView(ListView):
-    """Public landing: browse all publicly visible events."""
+class EventGalleryView(LoginRequiredMixin, ListView):
+    """Landing page: browse all publicly visible events.
+
+    Requires authentication — anonymous users are redirected to the login page.
+    """
 
     model = Event
     template_name = "gallery/event_gallery.html"
@@ -94,11 +98,13 @@ class EventGalleryView(ListView):
         return context
 
 
-class AlbumGalleryView(View):
+class AlbumGalleryView(LoginRequiredMixin, View):
     """Album gallery for a single event, or a direct album view.
 
     Reached via /gallery/event/<event_slug>/ (album cover grid + media)
     or /gallery/album/<album_slug>/ (media of one album).
+
+    Requires authentication — anonymous users are redirected to the login page.
     """
 
     def get(self, request, event_slug=None, album_slug=None):
@@ -174,8 +180,11 @@ class AlbumGalleryView(View):
         )
 
 
-class MediaDetailView(View):
-    """Media detail page with prev/next navigation within the album."""
+class MediaDetailView(LoginRequiredMixin, View):
+    """Media detail page with prev/next navigation within the album.
+
+    Requires authentication — anonymous users are redirected to the login page.
+    """
 
     def get(self, request, uuid):
         media = get_object_or_404(
@@ -218,7 +227,7 @@ class MediaDetailView(View):
         )
 
 
-@login_not_required
+@login_required
 def media_download(request, uuid):
     """Force download of a media file with Content-Disposition: attachment.
 
@@ -340,7 +349,7 @@ def gallery_password(request, share_token):
     )
 
 
-@login_not_required
+@login_required
 def event_password(request, event_slug):
     event = get_object_or_404(
         public_events_queryset(), slug=event_slug

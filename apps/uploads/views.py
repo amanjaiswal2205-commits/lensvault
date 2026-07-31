@@ -129,7 +129,7 @@ class UploadAPIView(LoginRequiredMixin, View):
                     {
                         "success": False,
                         "error": str(
-                            _("Video is too large. Maximum allowed is 2048 MB.")
+                            _("Video is too large. Maximum allowed is 100 MB.")
                         ),
                     },
                     status=400,
