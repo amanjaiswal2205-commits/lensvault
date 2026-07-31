@@ -47,7 +47,7 @@
             <a id="nav-next" href="{% url 'gallery:media_detail' next_media.uuid %}"
                class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition">Next →</a>
           {% endif %}
-          <a href="{{ media_item.file.url }}" download
+          <a href="{% url 'gallery:media_download' media_item.uuid %}"
              class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition">↓ Download</a>
         </div>
       </div>

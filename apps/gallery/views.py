@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_not_required
 from django.db.models import Count
-from django.http import Http404, HttpResponse, JsonResponse
+from django.http import FileResponse, Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
@@ -216,6 +216,45 @@ class MediaDetailView(View):
                 "next_media": next_media,
             },
         )
+
+
+@login_not_required
+def media_download(request, uuid):
+    """Force download of a media file with Content-Disposition: attachment.
+
+    Applies the same visibility checks as MediaDetailView so that only
+    authorized users who can already view the media can download it.
+    """
+    media = get_object_or_404(
+        Media.objects.select_related("album", "album__event", "event"),
+        uuid=uuid,
+        status=MediaStatus.ACTIVE,
+    )
+    event = media.album.event
+
+    if event.status != EventStatus.PUBLISHED:
+        raise Http404
+    if event.visibility == EventVisibility.PRIVATE:
+        raise Http404
+    if (
+        event.visibility == EventVisibility.PASSWORD_PROTECTED
+        and not _event_unlocked(request, event)
+    ):
+        return redirect("gallery:event_password", event_slug=event.slug)
+    if media.album.status != AlbumStatus.ACTIVE:
+        raise Http404
+    if not event.allow_download:
+        return HttpResponse("Downloads are disabled for this event.", status=403)
+
+    filename = media.file.name.split("/")[-1]
+    response = FileResponse(
+        media.file.open("rb"),
+        as_attachment=True,
+        filename=filename,
+    )
+    media.download_count = media.download_count + 1
+    media.save(update_fields=["download_count"])
+    return response
 
 
 class PublicGalleryView(View):

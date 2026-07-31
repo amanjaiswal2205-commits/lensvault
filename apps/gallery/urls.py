@@ -10,6 +10,7 @@ urlpatterns = [
     path("event/<slug:event_slug>/password/", views.event_password, name="event_password"),
     path("album/<slug:album_slug>/", views.AlbumGalleryView.as_view(), name="album_gallery"),
     path("media/<uuid:uuid>/", views.MediaDetailView.as_view(), name="media_detail"),
+    path("media/<uuid:uuid>/download/", views.media_download, name="media_download"),
     path("g/<uuid:share_token>/password/", views.gallery_password, name="gallery_password"),
     path("g/<uuid:share_token>/selected/", views.selected_photos, name="gallery_selected_photos"),
     path("manage/", management_views.ClientGalleryListView.as_view(), name="gallery_manage_list"),
